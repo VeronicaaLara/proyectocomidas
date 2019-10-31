@@ -13,6 +13,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -24,9 +32,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks, View.OnClickListener {
@@ -36,13 +47,38 @@ public class LoginActivity extends AppCompatActivity implements
     private FirebaseAuth.AuthStateListener authstateListener;
     private static final int CODE = 1;
     private SignInButton buttonGoogle;
+    private LoginButton buttonFacebook;
+    private CallbackManager callbackmanager;
+    private String btnPressed = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
 
+        callbackmanager = CallbackManager.Factory.create();
+
         initUI();
+
+        buttonFacebook.registerCallback(callbackmanager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(getApplicationContext(),"Inicio de sesión cancelado",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(getApplicationContext(),"¡Error!",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
 
         buttonGoogle.setOnClickListener(this);
 
@@ -77,6 +113,9 @@ public class LoginActivity extends AppCompatActivity implements
     private void initUI(){
         buttonGoogle = findViewById(R.id.button_google);
         buttonGoogle.setSize(SignInButton.SIZE_WIDE);
+
+        buttonFacebook = findViewById(R.id.button_facebook);
+        buttonFacebook.setReadPermissions(Arrays.asList("email"));
     }
 
     private void signIn(){
@@ -87,16 +126,21 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode,int resultCode,Intent data){
         super.onActivityResult(requestCode,resultCode,data);
 
-        if (requestCode == CODE){
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()){
-                GoogleSignInAccount account = result.getSignInAccount();
-                Toast.makeText(getApplicationContext(),"¡Has iniciado sesión correctamente!",Toast.LENGTH_SHORT).show();
-                AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(),null);
-                firebaseAuthWithGoogle(credential,account);
-            }else{
-                Toast.makeText(getApplicationContext(),"¡Error!",Toast.LENGTH_SHORT).show();
+
+        if(btnPressed == getString(R.string.google_pressed_code)){
+            if (requestCode == CODE){
+                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                if (result.isSuccess()){
+                    GoogleSignInAccount account = result.getSignInAccount();
+                    Toast.makeText(getApplicationContext(),"¡Has iniciado sesión correctamente!",Toast.LENGTH_SHORT).show();
+                    AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(),null);
+                    firebaseAuthWithGoogle(credential,account);
+                }else{
+                    Toast.makeText(getApplicationContext(),"¡Error!",Toast.LENGTH_SHORT).show();
+                }
             }
+        }else{
+            callbackmanager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -151,11 +195,22 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.button_google:{
+            case R.id.button_google:
+                btnPressed = getString(R.string.google_pressed_code);
                 signIn();
-            }
-            break;
+                break;
+
         }
+    }
+
+    private void handleFacebookAccessToken(AccessToken accessToken){
+        final AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                Toast.makeText(getApplicationContext(),"¡Has iniciado sesión correctamente!",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
 
