@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -18,7 +19,9 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
@@ -48,6 +51,7 @@ public class LoginActivity extends AppCompatActivity implements
     private static final int CODE = 1;
     private SignInButton buttonGoogle;
     private LoginButton buttonFacebook;
+    private Button btnSignOut;
     private CallbackManager callbackmanager;
     private String btnPressed = "";
 
@@ -79,23 +83,12 @@ public class LoginActivity extends AppCompatActivity implements
         });
 
 
-
         buttonGoogle.setOnClickListener(this);
+        buttonFacebook.setOnClickListener(this);
+        btnSignOut.setOnClickListener(this);
 
         configureSignIn();
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        authstateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null){
-                    Toast.makeText(getApplicationContext(),"Iniciando sesión",Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getApplicationContext(),"Cerrando sesión",Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
     }
 
     private void configureSignIn(){
@@ -111,11 +104,28 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     private void initUI(){
+        firebaseAuth = FirebaseAuth.getInstance();
         buttonGoogle = findViewById(R.id.button_google);
         buttonGoogle.setSize(SignInButton.SIZE_WIDE);
-
+        btnSignOut = findViewById(R.id.btn_SignOut);
         buttonFacebook = findViewById(R.id.button_facebook);
-        buttonFacebook.setReadPermissions(Arrays.asList("email"));
+        buttonFacebook.setReadPermissions("email", "public_profile");
+
+        changeUI(firebaseAuth.getCurrentUser());
+
+    }
+
+    private void changeUI(FirebaseUser user){
+
+        if(user == null && Profile.getCurrentProfile() == null){
+            buttonGoogle.setVisibility(View.VISIBLE);
+            buttonFacebook.setVisibility(View.VISIBLE);
+            btnSignOut.setVisibility(View.GONE);
+        }else{
+            buttonGoogle.setVisibility(View.GONE);
+            buttonFacebook.setVisibility(View.GONE);
+            btnSignOut.setVisibility(View.VISIBLE);
+        }
     }
 
     private void signIn(){
@@ -132,6 +142,7 @@ public class LoginActivity extends AppCompatActivity implements
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 if (result.isSuccess()){
                     GoogleSignInAccount account = result.getSignInAccount();
+
                     Toast.makeText(getApplicationContext(),"¡Has iniciado sesión correctamente!",Toast.LENGTH_SHORT).show();
                     AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(),null);
                     firebaseAuthWithGoogle(credential,account);
@@ -149,10 +160,10 @@ public class LoginActivity extends AppCompatActivity implements
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-                    String id = account.getId();
-                    String email = account.getEmail();
-                    String name = account.getDisplayName();
-                    Log.i("Account", id + ", " + email + ", " + name);
+                   //refresco la pantalla para mostrar cambio de botón
+                    finish();
+                    startActivity(getIntent());
+
                 }else{
                     Toast.makeText(getApplicationContext(),"Autentiación fallida",Toast.LENGTH_SHORT).show();
                 }
@@ -162,24 +173,27 @@ public class LoginActivity extends AppCompatActivity implements
 
     protected void onStart(){
         super.onStart();
+        changeUI(firebaseAuth.getCurrentUser());
 
-        if (firebaseAuth != null){
-            FirebaseAuth.getInstance().signOut();
+        //Obtener información de los usuarios logueados
+
+        if(firebaseAuth.getCurrentUser() != null){
+            Log.i("Account", firebaseAuth.getCurrentUser().getEmail());
         }
-        firebaseAuth.addAuthStateListener(authstateListener);
+
+        if(Profile.getCurrentProfile() != null){
+            Log.i("Account", Profile.getCurrentProfile().getName());
+
+        }
     }
 
     protected void onStop(){
         super.onStop();
-
-        if (firebaseAuth != null){
-            firebaseAuth.removeAuthStateListener(authstateListener);
-        }
+        changeUI(firebaseAuth.getCurrentUser());
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
     }
 
     @Override
@@ -199,16 +213,30 @@ public class LoginActivity extends AppCompatActivity implements
                 btnPressed = getString(R.string.google_pressed_code);
                 signIn();
                 break;
+            case R.id.button_facebook:
+                btnPressed = getString(R.string.facebook_pressed_code);
+                break;
+            case R.id.btn_SignOut:
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user != null){
+                    firebaseAuth.signOut();
+                }else{
+                    LoginManager.getInstance().logOut();
+                }
+                changeUI(user);
+                break;
 
         }
     }
 
-    private void handleFacebookAccessToken(AccessToken accessToken){
+    private void handleFacebookAccessToken(final AccessToken accessToken){
         final AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                Toast.makeText(getApplicationContext(),"¡Has iniciado sesión correctamente!",Toast.LENGTH_SHORT).show();
+                //refresco la pantalla para mostrar cambio de botón
+                finish();
+                startActivity(getIntent());
             }
         });
     }
