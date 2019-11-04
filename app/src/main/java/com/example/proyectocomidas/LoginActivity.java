@@ -19,6 +19,8 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
@@ -39,6 +41,9 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -175,15 +180,24 @@ public class LoginActivity extends AppCompatActivity implements
         super.onStart();
         changeUI(firebaseAuth.getCurrentUser());
 
-        //Obtener información de los usuarios logueados
+        //Obtener información del usuario logueado con google
 
         if(firebaseAuth.getCurrentUser() != null){
             Log.i("Account", firebaseAuth.getCurrentUser().getEmail());
         }
 
+        //Una forma de obtener información del usuario logueado en facebook
+
         if(Profile.getCurrentProfile() != null){
             Log.i("Account", Profile.getCurrentProfile().getName());
 
+        }
+
+        //Otra forma de obtener información del usuario logueado en facebook
+
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        if (accessToken != null) {
+            useLoginInformation(accessToken);
         }
     }
 
@@ -239,6 +253,22 @@ public class LoginActivity extends AppCompatActivity implements
                 startActivity(getIntent());
             }
         });
+    }
+
+    private void useLoginInformation(AccessToken accessToken) {
+        GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+            //OnCompleted is invoked once the GraphRequest is successful
+            @Override
+            public void onCompleted(JSONObject object, GraphResponse response) {
+                Log.i("Account", object.toString());
+            }
+        });
+        // We set parameters to the GraphRequest using a Bundle.
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,email,picture.width(200)");
+        request.setParameters(parameters);
+        // Initiate the GraphRequest
+        request.executeAsync();
     }
 }
 
