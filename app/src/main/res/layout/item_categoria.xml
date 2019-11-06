@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+
+    <RelativeLayout
+        android:id="@+id/lyfilaCategorias"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical"
+        android:padding="10dp"
+        >
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/ivImagenCategoria"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="0dp"
+            android:layout_alignParentRight="true"
+            />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
