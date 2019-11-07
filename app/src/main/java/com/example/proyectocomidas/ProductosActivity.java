@@ -58,8 +58,7 @@ public class ProductosActivity extends AppCompatActivity {
                         products.add(new Producto(name, description, image, available, idCatgeory));
                     }
 
-                    mAuth.signInAnonymously();
-                    productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage);
+                    productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth);
                     rvProducts.setAdapter(productAdapter);
                 }
             }

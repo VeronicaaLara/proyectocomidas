@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.List;
@@ -34,12 +35,16 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
     private Context context;
     private List<Producto> products;
     private FirebaseStorage mStorage;
+    private FirebaseAuth mAtuh;
+
     final long ONE_MEGABYTE = 1024 * 1024;
 
-    public ProductoAdapter(Context context, List<Producto> products, FirebaseStorage mStorage){
+    public ProductoAdapter(Context context, List<Producto> products, FirebaseStorage mStorage, FirebaseAuth mAuth){
         this.context = context;
         this.products = products;
         this.mStorage = mStorage;
+        this.mAtuh = mAuth;
+        mAuth.signInAnonymously();
     }
 
     @NonNull
