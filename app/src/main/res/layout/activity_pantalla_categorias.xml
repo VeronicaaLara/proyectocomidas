@@ -17,11 +17,11 @@
         tools:ignore="MissingConstraints">
 
         <Button
-            android:id="@+id/btnVerCategorias"
+            android:id="@+id/btnActualizar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center"
-            android:text="Ver categorias"
+            android:text="Actualizar"
             android:background="#FF5722"
             />
 
@@ -29,5 +29,10 @@
     </LinearLayout>
 
 
+    <android.support.v7.widget.RecyclerView
+
+        android:id="@+id/rvCategorias"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>
