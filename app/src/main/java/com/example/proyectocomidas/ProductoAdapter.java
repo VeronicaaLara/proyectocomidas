@@ -5,9 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,12 +25,14 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
 
         ImageView imgProduct;
         TextView tvName;
+        Button btnAdd;
 
         public ViewHolderProduct(View itemView){
             super(itemView);
 
             imgProduct = itemView.findViewById(R.id.imagenProducto);
             tvName = itemView.findViewById(R.id.nombreProducto);
+            btnAdd = itemView.findViewById(R.id.btnAñadir);
         }
     }
 
@@ -57,7 +61,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolderProduct viewHolderProduct, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolderProduct viewHolderProduct, final int i) {
         viewHolderProduct.tvName.setText(products.get(i).getNombre());
 
         String image = products.get(i).getImagen();
@@ -66,6 +70,13 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
             public void onSuccess(byte[] bytes) {
                 Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 viewHolderProduct.imgProduct.setImageBitmap(Bitmap.createScaledBitmap(bmp, viewHolderProduct.imgProduct.getWidth(), viewHolderProduct.imgProduct.getHeight(), false));
+            }
+        });
+
+        viewHolderProduct.btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("PRODUCT", products.get(i).toString());
             }
         });
     }
