@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -69,7 +70,9 @@ public class PantallaCategorias extends AppCompatActivity {
                     for (QueryDocumentSnapshot document: task.getResult()){
                         String name = document.getString("nombre");
                         String urlFoto = document.getData().get("imagen").toString();
-                        categorias.add(new Categoria(name, urlFoto));
+                        Log.e("error", document.getId());
+                        String idCategoria = document.getId();
+                        categorias.add(new Categoria(name, urlFoto, idCategoria));
                     }
 
                     categoriaAdapter = new CategoriaAdapter(PantallaCategorias.this, categorias);
