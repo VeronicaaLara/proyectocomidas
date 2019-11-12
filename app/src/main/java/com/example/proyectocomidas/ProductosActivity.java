@@ -26,12 +26,14 @@ public class ProductosActivity extends AppCompatActivity {
     private FirebaseFirestore mFiresotre;
     private FirebaseAuth mAuth;
     private FirebaseStorage mStorage;
-    private String idCategory = "7mu78QeeqTop0QEbnSvu";
+    private String idCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_productos);
+        Log.e("dentrifico",getIntent().getStringExtra("idCategoria"));
+        idCategory = getIntent().getStringExtra("idCategoria");
 
         initUI();
     }

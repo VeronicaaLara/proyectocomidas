@@ -4,12 +4,22 @@ public class Categoria {
 
     private String name;
     private String urlFoto;
+    private String id;
 
 
-    public Categoria(String name, String urlFoto) {
+    public Categoria(String name, String urlFoto, String id) {
         this.name = name;
         this.urlFoto = urlFoto;
+        this.id = id;
 
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
