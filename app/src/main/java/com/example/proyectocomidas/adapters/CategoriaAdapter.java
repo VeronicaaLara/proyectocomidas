@@ -3,8 +3,10 @@ package com.example.proyectocomidas.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.proyectocomidas.PantallaCategorias;
+import com.example.proyectocomidas.ProductosActivity;
 import com.example.proyectocomidas.R;
 import com.example.proyectocomidas.models.Categoria;
 
@@ -55,20 +59,9 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.View
                 @Override
                 public void onClick(View v) {
 
-                    //Creo un dialog
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-                    builder.setTitle("Has seleccionado la categoria:")
-                            .setMessage(categorias.get(i).getName())
-                            .setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.dismiss();
-                                }
-                            });
-
-                    builder.create();
-                    builder.show();
-
+                    Intent intent = new Intent(context, ProductosActivity.class);
+                    intent.putExtra("idCategoria", categorias.get(i).getId());
+                    context.startActivity(intent);
                 }
             });
 

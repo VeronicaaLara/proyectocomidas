@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ProyectoComidas</string>
+    <string name="facebook_pressed_code">Facebook</string>
+    <string name="google_pressed_code">Google</string>
+    <string name="facebook_app_id">763435347461116</string>
+    <string name="fb_login_protocol_scheme">fb763435347461116</string>
+
 </resources>
