@@ -52,6 +52,7 @@ public class PantallaCategorias extends AppCompatActivity {
     }
 
     private void initUI(){
+
         mFirestore = FirebaseFirestore.getInstance();
         rvCategorias = findViewById(R.id.rvCategorias);
         rvCategorias.setHasFixedSize(true);
