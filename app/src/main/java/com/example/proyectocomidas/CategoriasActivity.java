@@ -20,7 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PantallaCategorias extends AppCompatActivity {
+public class CategoriasActivity extends AppCompatActivity {
 
     private List<Categoria> categorias;
     private RecyclerView rvCategorias;
@@ -76,7 +76,7 @@ public class PantallaCategorias extends AppCompatActivity {
                         categorias.add(new Categoria(name, urlFoto, idCategoria));
                     }
 
-                    categoriaAdapter = new CategoriaAdapter(PantallaCategorias.this, categorias);
+                    categoriaAdapter = new CategoriaAdapter(CategoriasActivity.this, categorias);
                     rvCategorias.setAdapter(categoriaAdapter);
                 }
             }

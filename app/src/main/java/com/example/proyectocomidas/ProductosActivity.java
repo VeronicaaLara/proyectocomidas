@@ -35,6 +35,7 @@ public class ProductosActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseStorage mStorage;
     private String idCategory;
+    private String nameCategory;
     private EditText etFilter;
     private Button btnMenu;
 
@@ -44,6 +45,7 @@ public class ProductosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_productos);
         Log.e("dentrifico",getIntent().getStringExtra("idCategoria"));
+        nameCategory = getIntent().getStringExtra("nombreCategoria");
         idCategory = getIntent().getStringExtra("idCategoria");
 
         initUI();
@@ -58,25 +60,50 @@ public class ProductosActivity extends AppCompatActivity {
         rvProducts.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         products = new ArrayList<>();
 
-        mFirestore.collection("Productos").whereEqualTo("idCategorias", idCategory).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot document: task.getResult()){
-                        String id = document.getId();
-                        String name = document.getString("nombre");
-                        String description = document.getString("descripcion");
-                        Boolean available = document.getBoolean("disponible");
-                        String image = document.getString("foto");
-                        String idCatgeory = document.getString("idcategorias");
-                        products.add(new Producto(id,name, description, image, available, idCatgeory));
-                    }
+        if(nameCategory.equals("Todo")){
 
-                    productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth);
-                    rvProducts.setAdapter(productAdapter);
+            mFirestore.collection("Productos").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String id = document.getId();
+                            String name = document.getString("nombre");
+                            String description = document.getString("descripcion");
+                            Boolean available = document.getBoolean("disponible");
+                            String image = document.getString("foto");
+                            String idCatgeory = document.getString("idcategorias");
+                            products.add(new Producto(id, name, description, image, available, idCatgeory));
+                        }
+
+                        productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth);
+                        rvProducts.setAdapter(productAdapter);
+                    }
                 }
-            }
-        });
+            });
+
+        }else{
+
+            mFirestore.collection("Productos").whereEqualTo("idCategorias", idCategory).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String id = document.getId();
+                            String name = document.getString("nombre");
+                            String description = document.getString("descripcion");
+                            Boolean available = document.getBoolean("disponible");
+                            String image = document.getString("foto");
+                            String idCatgeory = document.getString("idcategorias");
+                            products.add(new Producto(id, name, description, image, available, idCatgeory));
+                        }
+
+                        productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth);
+                        rvProducts.setAdapter(productAdapter);
+                    }
+                }
+            });
+        }
 
         etFilter = findViewById(R.id.etFilter);
         etFilter.addTextChangedListener(new TextWatcher() {
