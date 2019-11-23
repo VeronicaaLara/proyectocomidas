@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -81,7 +82,7 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.View
 
         ImageView ivImagen;
 
-        RelativeLayout filaCategoria;
+        LinearLayout filaCategoria;
 
 
         public ViewHolderCategoria(View itemView){
