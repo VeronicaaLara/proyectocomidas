@@ -23,6 +23,7 @@
 
         <Button
             android:id="@+id/btnMenu"
+            android:text="Filtro"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_toEndOf="@+id/etFilter"
