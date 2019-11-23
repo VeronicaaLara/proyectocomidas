@@ -5,7 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,6 +30,7 @@ public class ProductosActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseStorage mStorage;
     private String idCategory;
+    private EditText etFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,24 @@ public class ProductosActivity extends AppCompatActivity {
                     productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth);
                     rvProducts.setAdapter(productAdapter);
                 }
+            }
+        });
+
+        etFilter = findViewById(R.id.etFilter);
+        etFilter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                productAdapter.getFilter().filter(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }
