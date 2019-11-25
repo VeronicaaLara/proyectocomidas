@@ -146,6 +146,10 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
 
             viewHolderProduct.btnAdd.setBackgroundColor(Color.parseColor("#979797"));
 
+        }else{
+            viewHolderProduct.tvName.setTextColor(Color.parseColor("#423D3D"));
+            viewHolderProduct.btnAdd.setEnabled(true);
+            viewHolderProduct.btnAdd.setBackgroundColor(Color.parseColor("#423D3D"));
         }
     }
 
