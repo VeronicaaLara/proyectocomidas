@@ -114,7 +114,6 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull final ViewHolderProduct viewHolderProduct, final int i) {
 
-
         viewHolderProduct.tvName.setText(products.get(i).getNombre());
 
         String image = products.get(i).getImagen();
@@ -146,6 +145,13 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
 
             viewHolderProduct.btnAdd.setBackgroundColor(Color.parseColor("#979797"));
 
+
+        }else{
+            if(!viewHolderProduct.btnAdd.isEnabled()){
+                viewHolderProduct.btnAdd.setEnabled(true);
+                viewHolderProduct.tvName.setTextColor(Color.parseColor("#000000"));
+                viewHolderProduct.btnAdd.setBackgroundColor(Color.parseColor("#423D3D"));
+            }
         }
     }
 
