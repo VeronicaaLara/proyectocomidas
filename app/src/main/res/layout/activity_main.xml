@@ -9,26 +9,10 @@
     android:padding="10dp"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+
+        android:id="@+id/rvCategorias"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        tools:ignore="MissingConstraints">
-
-        <Button
-            android:id="@+id/btnVerCategorias"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center"
-            android:text="Ver categorias"
-            android:background="@color/btn"
-            android:textColor="@color/txtBtn"
-            />
-
-
-    </LinearLayout>
-
-
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

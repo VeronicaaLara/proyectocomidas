@@ -1,19 +1,23 @@
 package com.example.proyectocomidas;
 
 public class Producto {
+    private String id;
     private String nombre;
     private String descripcion;
     private String imagen;
     private Boolean disponible;
     private String idCategorias;
 
-    public Producto(String nombre, String descripcion, String imagen, Boolean disponible, String idCategorias) {
+    public Producto(String id, String nombre, String descripcion, String imagen, Boolean disponible, String idCategorias) {
+        this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.imagen = imagen;
         this.disponible = disponible;
         this.idCategorias = idCategorias;
     }
+
+    public String getId() { return id; }
 
     public String getNombre() {
         return nombre;

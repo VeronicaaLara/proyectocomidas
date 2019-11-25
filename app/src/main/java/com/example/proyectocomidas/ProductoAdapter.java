@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,9 +29,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHolderProduct> {
+public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHolderProduct> implements Filterable {
 
     public class ViewHolderProduct extends RecyclerView.ViewHolder{
 
@@ -51,13 +54,48 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
     private List<Producto> products;
     private FirebaseStorage mStorage;
     private FirebaseAuth mAtuh;
+    private List<Producto> fullProducts;
 
 
     final long ONE_MEGABYTE = 1024 * 1024;
 
+
+
+    private Filter productsFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            List<Producto> filteredlist = new ArrayList<>();
+
+            if (charSequence == null || charSequence.length() == 0) {
+                filteredlist.addAll(fullProducts);
+            } else {
+                String filterPattern = charSequence.toString().toLowerCase().trim();
+
+                for (Producto item : fullProducts) {
+                    if (item.getNombre().toLowerCase().contains(filterPattern)) {
+                        filteredlist.add(item);
+                    }
+                }
+            }
+
+            FilterResults result = new FilterResults();
+            result.values = filteredlist;
+
+            return result;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            products.clear();
+            products.addAll((List) filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
+
     public ProductoAdapter(Context context, List<Producto> products, FirebaseStorage mStorage, FirebaseAuth mAuth){
         this.context = context;
         this.products = products;
+        fullProducts = new ArrayList<>(products);
         this.mStorage = mStorage;
         this.mAtuh = mAuth;
         mAuth.signInAnonymously();
@@ -108,17 +146,24 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
 
             viewHolderProduct.btnAdd.setBackgroundColor(Color.parseColor("#979797"));
 
-
-
+        }else{
+            viewHolderProduct.tvName.setTextColor(Color.parseColor("#423D3D"));
+            viewHolderProduct.btnAdd.setEnabled(true);
+            viewHolderProduct.btnAdd.setBackgroundColor(Color.parseColor("#423D3D"));
         }
-
-
-
-
     }
 
     @Override
     public int getItemCount() {
         return products.size();
+    }
+
+    public void setProducts(List<Producto> products){
+        this.products = products;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return productsFilter;
     }
 }

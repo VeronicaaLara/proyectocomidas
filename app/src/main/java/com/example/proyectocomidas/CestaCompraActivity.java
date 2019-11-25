@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CestaCompra extends AppCompatActivity {
+public class CestaCompraActivity extends AppCompatActivity {
 
     ListView miLista;
     ArrayAdapter<Producto> miAdapter;

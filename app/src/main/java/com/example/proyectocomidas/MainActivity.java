@@ -1,11 +1,11 @@
 package com.example.proyectocomidas;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -21,9 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-
-    private Button verCategorias;
+    private List<Categoria> categorias;
+    private RecyclerView rvCategorias;
+    private CategoriaAdapter categoriaAdapter;
+    private FirebaseFirestore mFirestore;
 
 
     @Override
@@ -31,20 +32,41 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        verCategorias = (Button) findViewById(R.id.btnVerCategorias);
-
-        verCategorias.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(MainActivity.this, PantallaCategorias.class);
-                startActivity(intent);            }
-        });
+        initUI();
+        obtenerCategorias();
 
     }
 
+    private void initUI(){
 
+        mFirestore = FirebaseFirestore.getInstance();
+        rvCategorias = findViewById(R.id.rvCategorias);
+        rvCategorias.setHasFixedSize(true);
+        rvCategorias.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+    }
+
+    private void obtenerCategorias(){
+
+        categorias = new ArrayList<>();
+
+        mFirestore.collection("Categorias").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (QueryDocumentSnapshot document: task.getResult()){
+                        String name = document.getString("nombre");
+                        String urlFoto = document.getData().get("imagen").toString();
+                        Log.e("error", document.getId());
+                        String idCategoria = document.getId();
+                        categorias.add(new Categoria(name, urlFoto, idCategoria));
+                    }
+
+                    categoriaAdapter = new CategoriaAdapter(MainActivity.this, categorias);
+                    rvCategorias.setAdapter(categoriaAdapter);
+                }
+            }
+        });
+    }
 
 }
