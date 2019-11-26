@@ -57,6 +57,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
     private FirebaseStorage mStorage;
     private FirebaseAuth mAtuh;
     private List<Producto> fullProducts;
+    private List<Producto> productsAdded;
 
 
     final long ONE_MEGABYTE = 1024 * 1024;
@@ -100,6 +101,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
         fullProducts = new ArrayList<>(products);
         this.mStorage = mStorage;
         this.mAtuh = mAuth;
+        this.productsAdded = new ArrayList<>();
         mAuth.signInAnonymously();
     }
 
@@ -131,7 +133,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
         viewHolderProduct.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("PRODUCT", products.get(i).toString());
+                productsAdded.add(products.get(i));
             }
         });
 
