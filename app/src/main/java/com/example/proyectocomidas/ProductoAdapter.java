@@ -38,6 +38,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
 
         ImageView imgProduct;
         TextView tvName;
+        TextView tvPrice;
         Button btnAdd;
 
         public ViewHolderProduct(View itemView){
@@ -45,6 +46,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
 
             imgProduct = itemView.findViewById(R.id.imagenProducto);
             tvName = itemView.findViewById(R.id.nombreProducto);
+            tvPrice = itemView.findViewById(R.id.precioProducto);
             btnAdd = itemView.findViewById(R.id.btnAñadir);
 
         }
@@ -115,6 +117,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
     public void onBindViewHolder(@NonNull final ViewHolderProduct viewHolderProduct, final int i) {
 
         viewHolderProduct.tvName.setText(products.get(i).getNombre());
+        viewHolderProduct.tvPrice.setText(products.get(i).getPrecio() + "€");
 
         String image = products.get(i).getImagen();
         mStorage.getReference().child(image).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {

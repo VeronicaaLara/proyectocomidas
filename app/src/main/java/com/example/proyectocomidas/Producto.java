@@ -7,14 +7,16 @@ public class Producto {
     private String imagen;
     private Boolean disponible;
     private String idCategorias;
+    private Double precio;
 
-    public Producto(String id, String nombre, String descripcion, String imagen, Boolean disponible, String idCategorias) {
+    public Producto(String id, String nombre, String descripcion, String imagen, Boolean disponible, String idCategorias, Double precio) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.imagen = imagen;
         this.disponible = disponible;
         this.idCategorias = idCategorias;
+        this.precio = precio;
     }
 
     public String getId() { return id; }
@@ -59,14 +61,24 @@ public class Producto {
         this.idCategorias = idCategorias;
     }
 
+    public Double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(Double precio) {
+        this.precio = precio;
+    }
+
     @Override
     public String toString() {
         return "Producto{" +
-                "nombre='" + nombre + '\'' +
+                "id='" + id + '\'' +
+                ", nombre='" + nombre + '\'' +
                 ", descripcion='" + descripcion + '\'' +
                 ", imagen='" + imagen + '\'' +
                 ", disponible=" + disponible +
                 ", idCategorias='" + idCategorias + '\'' +
+                ", precio=" + precio +
                 '}';
     }
 }

@@ -73,7 +73,8 @@ public class ProductosActivity extends AppCompatActivity {
                             Boolean available = document.getBoolean("disponible");
                             String image = document.getString("foto");
                             String idCatgeory = document.getString("idcategorias");
-                            products.add(new Producto(id, name, description, image, available, idCatgeory));
+                            Double precio = document.getDouble("precio");
+                            products.add(new Producto(id, name, description, image, available, idCatgeory, precio));
                         }
 
                         productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth);
@@ -95,7 +96,8 @@ public class ProductosActivity extends AppCompatActivity {
                             Boolean available = document.getBoolean("disponible");
                             String image = document.getString("foto");
                             String idCatgeory = document.getString("idcategorias");
-                            products.add(new Producto(id, name, description, image, available, idCatgeory));
+                            Double precio = document.getDouble("precio");
+                            products.add(new Producto(id, name, description, image, available, idCatgeory, precio));
                         }
 
                         productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth);
