@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -38,6 +39,7 @@ public class ProductosActivity extends AppCompatActivity {
     private String nameCategory;
     private EditText etFilter;
     private Button btnMenu;
+    private Toolbar mToolbar;
 
 
     @Override
@@ -47,6 +49,9 @@ public class ProductosActivity extends AppCompatActivity {
         Log.e("dentrifico",getIntent().getStringExtra("idCategoria"));
         nameCategory = getIntent().getStringExtra("nombreCategoria");
         idCategory = getIntent().getStringExtra("idCategoria");
+
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         initUI();
     }
