@@ -18,11 +18,10 @@
 
     </TextView>
 
-    <ListView
-        android:id="@+id/carritoLV"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvCestaCompra"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-    </ListView>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>
