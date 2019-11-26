@@ -1,6 +1,9 @@
 package com.example.proyectocomidas;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.facebook.share.Share;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,6 +46,8 @@ public class ProductosActivity extends AppCompatActivity {
     private EditText etFilter;
     private Button btnMenu;
     private Toolbar mToolbar;
+    private SharedPreferences preferences;
+    private ProductosCompra mProductsShop;
 
 
     @Override
@@ -66,6 +72,8 @@ public class ProductosActivity extends AppCompatActivity {
         rvProducts.setHasFixedSize(true);
         rvProducts.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         products = new ArrayList<>();
+        mProductsShop = new ProductosCompra();
+        preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
 
         if(nameCategory.equals("Todo")){
 
@@ -278,7 +286,13 @@ public class ProductosActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_shop){
-            Log.e("MENU", "Carrito");
+            mProductsShop.añadirProductos(productAdapter.getProductsAdded());
+            String json = mProductsShop.toJson();
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("productos", json);
+            editor.apply();
+            Intent intent = new Intent(ProductosActivity.this, CestaCompraActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

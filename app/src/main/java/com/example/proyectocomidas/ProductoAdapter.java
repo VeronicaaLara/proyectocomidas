@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +32,8 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.proyectocomidas.R.string.product_add;
 
 public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHolderProduct> implements Filterable {
 
@@ -134,6 +137,8 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
             @Override
             public void onClick(View view) {
                 productsAdded.add(products.get(i));
+                Snackbar snackbar = Snackbar.make(viewHolderProduct.itemView, "¡Producto añadido con éxito!", Snackbar.LENGTH_LONG);
+                snackbar.show();
             }
         });
 
@@ -171,5 +176,9 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
     @Override
     public Filter getFilter() {
         return productsFilter;
+    }
+
+    public List<Producto> getProductsAdded(){
+        return productsAdded;
     }
 }

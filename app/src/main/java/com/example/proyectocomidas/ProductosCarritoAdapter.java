@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -25,11 +27,15 @@ public class ProductosCarritoAdapter extends ArrayAdapter<Producto> {
 
     LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     SharedPreferences preferences;
+    private FirebaseStorage mStorage;
+
+    final long ONE_MEGABYTE = 1024 * 1024;
 
 
-    public ProductosCarritoAdapter(@NonNull Context context, ArrayList<Producto> productos){
+    public ProductosCarritoAdapter(@NonNull Context context, List<Producto> productos){
         super(context, 0, productos);
         preferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        this.mStorage = FirebaseStorage.getInstance();
     }
 
     @Override
@@ -40,13 +46,12 @@ public class ProductosCarritoAdapter extends ArrayAdapter<Producto> {
             convertView = inflater.inflate(R.layout.item_producto_cesta,parent, false);
         }
 
-        ImageView imagenProducto = convertView.findViewById(R.id.imagenProductoCesta);
+        final ImageView imagenProducto = convertView.findViewById(R.id.imagenProductoCesta);
         TextView nombreProducto = convertView.findViewById(R.id.nombreProductoCesta);
         Button btnEliminarProductoCesta = convertView.findViewById(R.id.btnEliminarProductoCesta);
 
         final Producto producto = getItem(position);
 
-        imagenProducto.setImageResource(R.drawable.hamburguesa);
         nombreProducto.setText(producto.getNombre());
 
         btnEliminarProductoCesta.setOnClickListener(new View.OnClickListener() {

@@ -55,25 +55,5 @@ public class CestaCompraActivity extends AppCompatActivity {
         btnEliminar = findViewById(R.id.btnEliminarProductoCesta);
         preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         gson = new Gson();
-
-        //Descomentar para volver a inicializar el carrito de prueba
-
-        /*
-        SharedPreferences.Editor editor = preferences.edit();
-
-        Producto producto1 = new Producto("Hamburguesa con queso", "", "", true, "");
-        Producto producto2 = new Producto("Hamburguesa vegana", "", "", true, "");
-        Producto producto3 = new Producto("Hamburguesa bacon y queso", "", "", true, "");
-
-        productos = new ProductosCompra();
-        productos.añadirProducto(producto1);
-        productos.añadirProducto(producto1);
-        productos.añadirProducto(producto2);
-        productos.añadirProducto(producto3);
-
-        String json = productos.toJson();
-        editor.putString("productos", json);
-        editor.apply();
-        */
     }
 }
