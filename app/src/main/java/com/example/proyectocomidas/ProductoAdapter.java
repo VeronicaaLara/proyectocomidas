@@ -181,4 +181,5 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
     public List<Producto> getProductsAdded(){
         return productsAdded;
     }
+
 }

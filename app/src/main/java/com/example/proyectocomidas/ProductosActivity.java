@@ -296,4 +296,23 @@ public class ProductosActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        mProductsShop.añadirProductos(productAdapter.getProductsAdded());
+        String json = mProductsShop.toJson();
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("productos", json);
+        editor.apply();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        String json = preferences.getString("productos", "");
+        Log.i("PRUEBA", json);
+    }
 }
