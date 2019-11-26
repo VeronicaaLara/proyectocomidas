@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,6 +27,7 @@ public class CestaCompraActivity extends AppCompatActivity {
     Button btnEliminar;
     SharedPreferences preferences;
     Gson gson;
+    Button pagarBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +57,18 @@ public class CestaCompraActivity extends AppCompatActivity {
         btnEliminar = findViewById(R.id.btnEliminarProductoCesta);
         preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         gson = new Gson();
+        pagarBtn = findViewById(R.id.pagarBtn);
+        pagarBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CestaCompraActivity.this, DatosCompraActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //Descomentar para volver a inicializar el carrito de prueba
 
-        /*
+
         SharedPreferences.Editor editor = preferences.edit();
 
         Producto producto1 = new Producto("Hamburguesa con queso", "", "", true, "");
@@ -74,6 +84,6 @@ public class CestaCompraActivity extends AppCompatActivity {
         String json = productos.toJson();
         editor.putString("productos", json);
         editor.apply();
-        */
+
     }
 }
