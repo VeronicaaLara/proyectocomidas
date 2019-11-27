@@ -47,6 +47,7 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
     private List<Producto> products;
     private FirebaseStorage mStorage;
     private FirebaseAuth mAtuh;
+    private SharedPreferences preferences;
 
     final long ONE_MEGABYTE = 1024 * 1024;
 
@@ -55,6 +56,7 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
         this.products = products;
         this.mStorage = mStorage;
         this.mAtuh = mAuth;
+        preferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
     }
 
     @NonNull
@@ -77,6 +79,32 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
             public void onSuccess(byte[] bytes) {
                 Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 viewHolderCestaCarrito.imgProduct.setImageBitmap(Bitmap.createScaledBitmap(bmp, viewHolderCestaCarrito.imgProduct.getWidth(), viewHolderCestaCarrito.imgProduct.getHeight(), false));
+            }
+        });
+
+        viewHolderCestaCarrito.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String json = preferences.getString("productos", "");
+                SharedPreferences.Editor editor = preferences.edit();
+
+                ProductosCompra productos = new ProductosCompra();
+
+                if(! json.equals("")) {
+                    productos = new ProductosCompra(productos.fromJSON(json).getListaProductos());
+                }
+
+                products.remove(i);
+                notifyDataSetChanged();
+
+                if(productos.getListaProductos().size() > 0){
+                    productos.eliminarProducto(i);
+                    Log.i("PRUEBA", productos.toString());
+                    json = productos.toJson();
+                    editor.putString("productos", json);
+                    editor.apply();
+                }
+
             }
         });
     }

@@ -46,8 +46,8 @@ public class ProductosActivity extends AppCompatActivity {
     private EditText etFilter;
     private Button btnMenu;
     private Toolbar mToolbar;
-    private SharedPreferences preferences;
     private ProductosCompra mProductsShop;
+    private SharedPreferences preferences;
 
 
     @Override
@@ -73,7 +73,7 @@ public class ProductosActivity extends AppCompatActivity {
         rvProducts.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         products = new ArrayList<>();
         mProductsShop = new ProductosCompra();
-        preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        preferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
 
         if(nameCategory.equals("Todo")){
 
@@ -92,8 +92,13 @@ public class ProductosActivity extends AppCompatActivity {
                             products.add(new Producto(id, name, description, image, available, idCatgeory, precio));
                         }
 
-                        productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth);
+                        productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth, mProductsShop);
                         rvProducts.setAdapter(productAdapter);
+
+                        String json = preferences.getString("productos", "");
+                        if (!json.equals("")){
+                            productAdapter.setProductsAdded(mProductsShop.fromJSON(json).getListaProductos());
+                        }
                     }
                 }
             });
@@ -115,8 +120,13 @@ public class ProductosActivity extends AppCompatActivity {
                             products.add(new Producto(id, name, description, image, available, idCatgeory, precio));
                         }
 
-                        productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth);
+                        productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth, mProductsShop);
                         rvProducts.setAdapter(productAdapter);
+
+                        String json = preferences.getString("productos", "");
+                        if (!json.equals("")){
+                            productAdapter.setProductsAdded(mProductsShop.fromJSON(json).getListaProductos());
+                        }
                     }
                 }
             });
@@ -286,33 +296,9 @@ public class ProductosActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_shop){
-            mProductsShop.añadirProductos(productAdapter.getProductsAdded());
-            String json = mProductsShop.toJson();
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("productos", json);
-            editor.apply();
             Intent intent = new Intent(ProductosActivity.this, CestaCompraActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        mProductsShop.añadirProductos(productAdapter.getProductsAdded());
-        String json = mProductsShop.toJson();
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("productos", json);
-        editor.apply();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        String json = preferences.getString("productos", "");
-        Log.i("PRUEBA", json);
     }
 }

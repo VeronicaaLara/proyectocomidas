@@ -2,6 +2,7 @@ package com.example.proyectocomidas;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -17,23 +18,13 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.proyectocomidas.adapters.CategoriaAdapter;
-import com.example.proyectocomidas.models.Categoria;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.proyectocomidas.R.string.product_add;
 
 public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHolderProduct> implements Filterable {
 
@@ -61,6 +52,8 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
     private FirebaseAuth mAtuh;
     private List<Producto> fullProducts;
     private List<Producto> productsAdded;
+    private ProductosCompra productsShop;
+    private SharedPreferences preferences;
 
 
     final long ONE_MEGABYTE = 1024 * 1024;
@@ -98,7 +91,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
         }
     };
 
-    public ProductoAdapter(Context context, List<Producto> products, FirebaseStorage mStorage, FirebaseAuth mAuth){
+    public ProductoAdapter(Context context, List<Producto> products, FirebaseStorage mStorage, FirebaseAuth mAuth, ProductosCompra productsShop){
         this.context = context;
         this.products = products;
         fullProducts = new ArrayList<>(products);
@@ -106,6 +99,8 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
         this.mAtuh = mAuth;
         this.productsAdded = new ArrayList<>();
         mAuth.signInAnonymously();
+        this.productsShop = productsShop;
+        preferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
     }
 
     @NonNull
@@ -137,6 +132,11 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
             @Override
             public void onClick(View view) {
                 productsAdded.add(products.get(i));
+                productsShop.añadirProductos(productsAdded);
+                String json = productsShop.toJson();
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("productos", json);
+                editor.apply();
                 Snackbar snackbar = Snackbar.make(viewHolderProduct.itemView, "¡Producto añadido con éxito!", Snackbar.LENGTH_LONG);
                 snackbar.show();
             }
@@ -178,8 +178,5 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
         return productsFilter;
     }
 
-    public List<Producto> getProductsAdded(){
-        return productsAdded;
-    }
-
+    public void setProductsAdded(List<Producto> productsAdded){ this.productsAdded = productsAdded; }
 }
