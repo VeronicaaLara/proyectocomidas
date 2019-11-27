@@ -48,6 +48,7 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
     private FirebaseStorage mStorage;
     private FirebaseAuth mAtuh;
     private SharedPreferences preferences;
+    private ProductosCompra productsShop;
 
     final long ONE_MEGABYTE = 1024 * 1024;
 
@@ -57,6 +58,7 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
         this.mStorage = mStorage;
         this.mAtuh = mAuth;
         preferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        productsShop = new ProductosCompra();
     }
 
     @NonNull
@@ -85,22 +87,13 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
         viewHolderCestaCarrito.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String json = preferences.getString("productos", "");
-                SharedPreferences.Editor editor = preferences.edit();
-
-                ProductosCompra productos = new ProductosCompra();
-
-                if(! json.equals("")) {
-                    productos = new ProductosCompra(productos.fromJSON(json).getListaProductos());
-                }
-
                 products.remove(i);
                 notifyDataSetChanged();
 
-                if(productos.getListaProductos().size() > 0){
-                    productos.eliminarProducto(i);
-                    Log.i("PRUEBA", productos.toString());
-                    json = productos.toJson();
+                if(products.size() > 0){
+                    productsShop.añadirProductos(products);
+                    String json = productsShop.toJson();
+                    SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("productos", json);
                     editor.apply();
                 }
