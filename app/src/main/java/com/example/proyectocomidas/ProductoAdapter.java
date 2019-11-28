@@ -136,7 +136,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
                 String json = productsShop.toJson();
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("productos", json);
-                editor.apply();
+                editor.commit();
                 Snackbar snackbar = Snackbar.make(viewHolderProduct.itemView, "¡Producto añadido con éxito!", Snackbar.LENGTH_LONG);
                 snackbar.show();
             }
