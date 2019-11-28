@@ -23,22 +23,40 @@
 
         <TextView
             android:id="@+id/nombreProductoCesta"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/imagenProductoCesta"
-            android:layout_marginStart="100dp">
+            android:textAlignment="center"
+            android:textSize="15dp">
         </TextView>
 
-        <Button
-            android:id="@+id/btnEliminarProductoCesta"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Eliminar"
-            android:layout_toEndOf="@+id/imagenProductoCesta"
-            android:layout_marginStart="100dp"
+            android:orientation="horizontal"
             android:layout_marginTop="20dp"
-            android:layout_below="@id/nombreProductoCesta">
-        </Button>
+            android:layout_below="@id/nombreProductoCesta"
+            android:layout_toEndOf="@+id/imagenProductoCesta">
+
+            <TextView
+                android:id="@+id/precioProductoCesta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="15dp"
+                android:textAlignment="center"/>
+
+            <Button
+                android:id="@+id/btnEliminarProductoCesta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Eliminar"
+                android:textColor="@android:color/holo_red_dark"
+                android:layout_weight="1">
+            </Button>
+
+        </LinearLayout>
+
 
     </RelativeLayout>
 

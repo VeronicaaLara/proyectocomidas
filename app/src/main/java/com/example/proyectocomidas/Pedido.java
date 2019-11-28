@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp;
 
 public class Pedido {
     private Timestamp fechaPedido;
+    private String idUser;
     private String nombre;
     private String nombrePedido;
     private String direccion;
@@ -14,6 +15,7 @@ public class Pedido {
 
     public Pedido(Timestamp fechaPedido, String nombre, String nombrePedido, String direccion, String telefono, String horaRecogida, String comentarios, Boolean favorito) {
         this.fechaPedido = fechaPedido;
+        this.idUser = "";
         this.nombre = nombre;
         this.nombrePedido = nombrePedido;
         this.direccion = direccion;
@@ -25,6 +27,7 @@ public class Pedido {
 
     public Pedido(Timestamp fechaPedido, String nombre, String direccion, String telefono, String horaRecogida) {
         this.fechaPedido = fechaPedido;
+        this.idUser = "";
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
@@ -36,6 +39,7 @@ public class Pedido {
 
     public Pedido(Timestamp fechaPedido, String nombre, String direccion, String telefono, String comentarios, String horaRecogida) {
         this.fechaPedido = fechaPedido;
+        this.idUser = "";
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
@@ -101,12 +105,30 @@ public class Pedido {
         this.favorito = favorito;
     }
 
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
     @Override
     public String toString() {
         return "Pedido{" +
                 "fechaPedido=" + fechaPedido +
+                ", idUser='" + idUser + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", nombrePedido='" + nombrePedido + '\'' +
+                ", direccion='" + direccion + '\'' +
                 ", telefono='" + telefono + '\'' +
                 ", horaRecogida='" + horaRecogida + '\'' +
                 ", comentarios='" + comentarios + '\'' +

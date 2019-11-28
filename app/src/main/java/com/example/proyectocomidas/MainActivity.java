@@ -64,9 +64,6 @@ public class MainActivity extends AppCompatActivity {
         rvCategorias.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         boolean flag = false; // valor por defecto si aun no se ha tomado el username
-
-
-
     }
 
     private void obtenerCategorias(){
