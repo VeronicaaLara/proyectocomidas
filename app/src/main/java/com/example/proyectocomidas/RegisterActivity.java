@@ -1,5 +1,6 @@
 package com.example.proyectocomidas;
 
+
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -47,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()){
-                                    Usuario user = new Usuario(name, email, address, phone, password);
+                                    Usuario user = new Usuario(name, email, address, phone);
                                     addNewUser(user);
                                 }else{
                                     Toast.makeText(getApplicationContext(), "Error al realizar registro", Toast.LENGTH_SHORT).show();

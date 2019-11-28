@@ -6,8 +6,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp"
-    tools:context=".MainActivity">
+    android:padding="0dp"
+    tools:context=".MainActivity"
+   >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:navigationIcon="@drawable/ic_launcher_foreground"><!-- navigation icon for the Toolbar-->
+    </android.support.v7.widget.Toolbar>
+
 
     <android.support.v7.widget.RecyclerView
 

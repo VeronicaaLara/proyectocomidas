@@ -5,4 +5,6 @@
     <string name="facebook_app_id">763435347461116</string>
     <string name="fb_login_protocol_scheme">fb763435347461116</string>
 
+    <string name="updated">%s updated.</string>
+
 </resources>

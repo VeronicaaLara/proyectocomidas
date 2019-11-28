@@ -1,18 +1,19 @@
 package com.example.proyectocomidas;
 
+
 public class Usuario {
     private String nombre;
     private String email;
     private String direccion;
     private String telefono;
-    private String password;
 
-    public Usuario(String nombre, String email, String direccion, String telefono, String password) {
+
+    public Usuario(String nombre, String email, String direccion, String telefono) {
         this.nombre = nombre;
         this.email = email;
         this.direccion = direccion;
         this.telefono = telefono;
-        this.password = password;
+
     }
 
     public String getNombre() {
@@ -47,13 +48,8 @@ public class Usuario {
         this.telefono = telefono;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+
 
     @Override
     public String toString() {
@@ -62,7 +58,6 @@ public class Usuario {
                 ", email='" + email + '\'' +
                 ", direccion='" + direccion + '\'' +
                 ", telefono='" + telefono + '\'' +
-                ", password='" + password + '\'' +
                 '}';
     }
 }
