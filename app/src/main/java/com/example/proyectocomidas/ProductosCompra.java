@@ -23,7 +23,7 @@ public class ProductosCompra {
         return json;
     }
 
-    public ProductosCompra fromJSON(String json){
+    public static ProductosCompra fromJSON(String json){
         Gson gson = new Gson();
         return gson.fromJson(json, ProductosCompra.class);
     }

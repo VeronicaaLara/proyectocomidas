@@ -1,6 +1,9 @@
 package com.example.proyectocomidas;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,9 +15,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -22,14 +27,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class DatosCompraActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
-    EditText nombreText, emailText, direccionText, telefonoText;
+    EditText nombreText, emailText, direccionText, telefonoText, observacionesText;
     Spinner spinner;
     Button btnPedido;
+    SharedPreferences preferences;
+
 
 
     @Override
@@ -46,6 +54,7 @@ public class DatosCompraActivity extends AppCompatActivity {
         emailText = findViewById(R.id.emailText);
         direccionText = findViewById(R.id.direccionText);
         telefonoText = findViewById(R.id.telefonoText);
+        observacionesText = findViewById(R.id.observacionesText);
         btnPedido = findViewById(R.id.btnPedido);
         spinner = findViewById(R.id.horaSelect);
 
@@ -220,7 +229,36 @@ public class DatosCompraActivity extends AppCompatActivity {
             if(hora.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Debes seleccionar una hora de recogida", Toast.LENGTH_SHORT).show();
             } else {
-               // Timestamp fechaPedido = new Timestamp(new Date());
+
+                preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+                String json = preferences.getString("productos", "");
+                final List<Producto> productos = ProductosCompra.fromJSON(json).getListaProductos();
+
+                Timestamp fechaPedido = new Timestamp(new Date());
+
+                Pedido pedido;
+
+               if(observacionesText.getText().toString().isEmpty()){
+                   pedido = new Pedido(fechaPedido,nombreText.getText().toString().trim(), direccionText.getText().toString().trim(), telefonoText.getText().toString().trim(), hora);
+               }else{
+                   pedido = new Pedido(fechaPedido,nombreText.getText().toString().trim(), direccionText.getText().toString().trim(), telefonoText.getText().toString().trim(), observacionesText.getText().toString().trim(), hora);
+               }
+
+               firebaseFirestore.collection("Pedidos").add(pedido).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                   @Override
+                   public void onSuccess(DocumentReference documentReference) {
+                       for(int i = 0; i < productos.size(); i++){
+                           PedidoProducto pp = new PedidoProducto(documentReference.getId(), productos.get(i).getId());
+                           firebaseFirestore.collection("PedidoProductos").add(pp).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                               @Override
+                               public void onSuccess(DocumentReference documentReference) {
+                                   Toast toast1 = Toast.makeText(getApplicationContext(), "Pedido realizado", Toast.LENGTH_SHORT);
+                                   toast1.show();
+                               }
+                           });
+                       }
+                   }
+               });
             }
         }
     }
