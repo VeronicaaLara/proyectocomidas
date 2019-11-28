@@ -165,6 +165,9 @@ public class DatosCompraActivity extends AppCompatActivity {
         } else if(calendarioAhora.before(calendarioCierreMañana)){
             calendarioAhora.add(Calendar.MINUTE, 30);
 
+            if(calendarioAhora.after(calendarioCierreMañana))
+                calendarioAhora = calendarioAperturaTarde;
+
             while(calendarioAhora.before(calendarioCierreMañana)){
 
                 if(calendarioAhora.after(calendarioCierreMañana))
@@ -181,9 +184,11 @@ public class DatosCompraActivity extends AppCompatActivity {
                 horasRecogida.add(format.format(calendarioAhora.getTime()));
                 calendarioAhora.add(Calendar.MINUTE, 30);
             }
-
         } else {
             calendarioAhora.add(Calendar.MINUTE, 30);
+
+            if(calendarioAhora.after(calendarioCierreTarde))
+                calendarioAhora = calendarioAperturaMañana;
 
             while(calendarioAhora.before(calendarioCierreTarde)){
 

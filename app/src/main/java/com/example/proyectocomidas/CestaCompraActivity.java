@@ -64,6 +64,8 @@ public class CestaCompraActivity extends AppCompatActivity {
         rvCestaCarrito.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         gson = new Gson();
+        mStorage = FirebaseStorage.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         pagarBtn = findViewById(R.id.pagarBtn);
         pagarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
