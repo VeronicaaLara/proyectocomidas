@@ -90,12 +90,12 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
                 products.remove(i);
                 notifyDataSetChanged();
 
-                if(products.size() > 0){
+                if(products.size() >= 0){
                     productsShop.añadirProductos(products);
                     String json = productsShop.toJson();
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("productos", json);
-                    editor.apply();
+                    editor.commit();
                 }
 
             }
