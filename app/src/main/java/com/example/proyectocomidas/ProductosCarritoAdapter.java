@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,65 +17,94 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductosCarritoAdapter extends ArrayAdapter<Producto> {
-
-    LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    SharedPreferences preferences;
+public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarritoAdapter.ViewHolderCestaCarrito> {
 
 
-    public ProductosCarritoAdapter(@NonNull Context context, ArrayList<Producto> productos){
-        super(context, 0, productos);
+    public class ViewHolderCestaCarrito extends RecyclerView.ViewHolder{
+
+        ImageView imgProduct;
+        TextView tvName;
+        Button btnDelete;
+
+        public ViewHolderCestaCarrito(View itemView){
+            super(itemView);
+
+            imgProduct = itemView.findViewById(R.id.imagenProductoCesta);
+            tvName = itemView.findViewById(R.id.nombreProductoCesta);
+            btnDelete = itemView.findViewById(R.id.btnEliminarProductoCesta);
+        }
+    }
+
+    private Context context;
+    private List<Producto> products;
+    private FirebaseStorage mStorage;
+    private FirebaseAuth mAtuh;
+    private SharedPreferences preferences;
+    private ProductosCompra productsShop;
+
+    final long ONE_MEGABYTE = 1024 * 1024;
+
+    public ProductosCarritoAdapter(Context context, List<Producto> products, FirebaseStorage mStorage, FirebaseAuth mAuth){
+        this.context = context;
+        this.products = products;
+        this.mStorage = mStorage;
+        this.mAtuh = mAuth;
         preferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        productsShop = new ProductosCompra();
+    }
+
+    @NonNull
+    @Override
+    public ProductosCarritoAdapter.ViewHolderCestaCarrito onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_producto_cesta, viewGroup, false);
+        final ViewHolderCestaCarrito vhcc = new ViewHolderCestaCarrito(view);
+
+        return vhcc;
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent){
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public void onBindViewHolder(@NonNull final ProductosCarritoAdapter.ViewHolderCestaCarrito viewHolderCestaCarrito, final int i) {
 
-        if(null == convertView){
-            convertView = inflater.inflate(R.layout.item_producto_cesta,parent, false);
-        }
+        viewHolderCestaCarrito.tvName.setText(products.get(i).getNombre());
 
-        ImageView imagenProducto = convertView.findViewById(R.id.imagenProductoCesta);
-        TextView nombreProducto = convertView.findViewById(R.id.nombreProductoCesta);
-        Button btnEliminarProductoCesta = convertView.findViewById(R.id.btnEliminarProductoCesta);
-
-        final Producto producto = getItem(position);
-
-        imagenProducto.setImageResource(R.drawable.hamburguesa);
-        nombreProducto.setText(producto.getNombre());
-
-        btnEliminarProductoCesta.setOnClickListener(new View.OnClickListener() {
+        String image = products.get(i).getImagen();
+        mStorage.getReference().child(image).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
-            public void onClick(View view) {
-                String json = preferences.getString("productos", "");
-                SharedPreferences.Editor editor = preferences.edit();
-
-                ProductosCompra productos = new ProductosCompra();
-
-                if(! json.equals("")) {
-                    productos = new ProductosCompra(productos.fromJSON(json).getListaProductos());
-                }
-
-                remove(getItem(position));
-                notifyDataSetChanged();
-
-                if(productos.getListaProductos().size() > 0){
-                    productos.eliminarProducto(position);
-                    Log.i("PRUEBA", productos.toString());
-                    json = productos.toJson();
-                    editor.putString("productos", json);
-                    editor.apply();
-                }
+            public void onSuccess(byte[] bytes) {
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                viewHolderCestaCarrito.imgProduct.setImageBitmap(Bitmap.createScaledBitmap(bmp, viewHolderCestaCarrito.imgProduct.getWidth(), viewHolderCestaCarrito.imgProduct.getHeight(), false));
             }
         });
 
-        return convertView;
+        viewHolderCestaCarrito.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                products.remove(i);
+                notifyDataSetChanged();
+
+                if(products.size() >= 0){
+                    productsShop.añadirProductos(products);
+                    String json = productsShop.toJson();
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("productos", json);
+                    editor.commit();
+                }
+
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return products.size();
     }
 
 }

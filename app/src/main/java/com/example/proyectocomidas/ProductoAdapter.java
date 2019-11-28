@@ -2,10 +2,12 @@ package com.example.proyectocomidas;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,21 +18,13 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.proyectocomidas.adapters.CategoriaAdapter;
-import com.example.proyectocomidas.models.Categoria;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHolderProduct> implements Filterable {
 
@@ -38,6 +32,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
 
         ImageView imgProduct;
         TextView tvName;
+        TextView tvPrice;
         Button btnAdd;
 
         public ViewHolderProduct(View itemView){
@@ -45,6 +40,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
 
             imgProduct = itemView.findViewById(R.id.imagenProducto);
             tvName = itemView.findViewById(R.id.nombreProducto);
+            tvPrice = itemView.findViewById(R.id.precioProducto);
             btnAdd = itemView.findViewById(R.id.btnAñadir);
 
         }
@@ -55,6 +51,9 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
     private FirebaseStorage mStorage;
     private FirebaseAuth mAtuh;
     private List<Producto> fullProducts;
+    private List<Producto> productsAdded;
+    private ProductosCompra productsShop;
+    private SharedPreferences preferences;
 
 
     final long ONE_MEGABYTE = 1024 * 1024;
@@ -92,13 +91,16 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
         }
     };
 
-    public ProductoAdapter(Context context, List<Producto> products, FirebaseStorage mStorage, FirebaseAuth mAuth){
+    public ProductoAdapter(Context context, List<Producto> products, FirebaseStorage mStorage, FirebaseAuth mAuth, ProductosCompra productsShop){
         this.context = context;
         this.products = products;
         fullProducts = new ArrayList<>(products);
         this.mStorage = mStorage;
         this.mAtuh = mAuth;
+        this.productsAdded = new ArrayList<>();
         mAuth.signInAnonymously();
+        this.productsShop = productsShop;
+        preferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
     }
 
     @NonNull
@@ -115,20 +117,28 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
     public void onBindViewHolder(@NonNull final ViewHolderProduct viewHolderProduct, final int i) {
 
         viewHolderProduct.tvName.setText(products.get(i).getNombre());
+        viewHolderProduct.tvPrice.setText(products.get(i).getPrecio() + "€");
 
         String image = products.get(i).getImagen();
         mStorage.getReference().child(image).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                viewHolderProduct.imgProduct.setImageBitmap(Bitmap.createScaledBitmap(bmp, viewHolderProduct.imgProduct.getWidth(), viewHolderProduct.imgProduct.getHeight(), false));
+                viewHolderProduct.imgProduct.setImageBitmap(Bitmap.createScaledBitmap(bmp, 525, 525, false));
             }
         });
 
         viewHolderProduct.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("PRODUCT", products.get(i).toString());
+                productsAdded.add(products.get(i));
+                productsShop.añadirProductos(productsAdded);
+                String json = productsShop.toJson();
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("productos", json);
+                editor.commit();
+                Snackbar snackbar = Snackbar.make(viewHolderProduct.itemView, "¡Producto añadido con éxito!", Snackbar.LENGTH_LONG);
+                snackbar.show();
             }
         });
 
@@ -146,6 +156,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
             viewHolderProduct.btnAdd.setBackgroundColor(Color.parseColor("#979797"));
 
         }else {
+
             if (!viewHolderProduct.btnAdd.isEnabled()) {
                 viewHolderProduct.btnAdd.setEnabled(true);
                 viewHolderProduct.tvName.setTextColor(Color.parseColor("#000000"));
@@ -167,4 +178,6 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
     public Filter getFilter() {
         return productsFilter;
     }
+
+    public void setProductsAdded(List<Producto> productsAdded){ this.productsAdded = productsAdded; }
 }

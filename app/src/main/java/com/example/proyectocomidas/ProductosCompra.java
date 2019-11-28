@@ -3,16 +3,17 @@ package com.example.proyectocomidas;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProductosCompra {
 
-    private ArrayList<Producto> listaProductos;
+    private List<Producto> listaProductos;
 
     public ProductosCompra() {
         this.listaProductos = new ArrayList<>();
     }
 
-    public ProductosCompra(ArrayList<Producto> placesList) {
+    public ProductosCompra(List<Producto> placesList) {
         this.listaProductos = placesList;
     }
 
@@ -27,7 +28,7 @@ public class ProductosCompra {
         return gson.fromJson(json, ProductosCompra.class);
     }
 
-    public ArrayList getListaProductos() {
+    public List<Producto> getListaProductos() {
         return listaProductos;
     }
 
@@ -38,6 +39,8 @@ public class ProductosCompra {
     public void eliminarProducto(Producto place){
         listaProductos.remove(place);
     }
+
+    public void añadirProductos(List<Producto> productos) {listaProductos = productos;}
 
     public void eliminarProducto(int index){
         listaProductos.remove(index);
