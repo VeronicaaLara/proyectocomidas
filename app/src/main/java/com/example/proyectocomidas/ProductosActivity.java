@@ -200,6 +200,16 @@ public class ProductosActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        String json = preferences.getString("productos", "");
+        if (!json.equals("")){
+            productAdapter.setProductsAdded(mProductsShop.fromJSON(json).getListaProductos());
+        }
+
+    }
+
     private void inflateMenuAllergens(final List<Alergeno> allergens, final List<AlergenosIngredientes> alergenosIngredientes, final List<IngredientesProducto> ingredientesProductos){
         final ArrayList allergenFilter = new ArrayList();
         final CharSequence[] cs = new CharSequence[allergens.size()];
