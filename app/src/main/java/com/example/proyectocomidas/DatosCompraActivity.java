@@ -1,6 +1,9 @@
 package com.example.proyectocomidas;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -247,7 +250,7 @@ public class DatosCompraActivity extends AppCompatActivity {
                    @Override
                    public void onSuccess(DocumentReference documentReference) {
                        for(int i = 0; i < productos.size(); i++){
-                           PedidoProducto pp = new PedidoProducto(documentReference.getId(), productos.get(i).getId());
+                           final PedidoProducto pp = new PedidoProducto(documentReference.getId(), productos.get(i).getId());
                            firebaseFirestore.collection("PedidoProductos").add(pp).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                @Override
                                public void onSuccess(DocumentReference documentReference) {
@@ -256,8 +259,7 @@ public class DatosCompraActivity extends AppCompatActivity {
                                    editor.clear();
                                    editor.commit();
 
-                                   Toast toast1 = Toast.makeText(getApplicationContext(), "Pedido realizado", Toast.LENGTH_SHORT);
-                                   toast1.show();
+                                   makeDialog(pp.getIdPedido());
                                }
                            });
                        }
@@ -265,5 +267,30 @@ public class DatosCompraActivity extends AppCompatActivity {
                });
             }
         }
+    }
+
+    private void makeDialog(String idPedido){
+        final EditText nombrePedidoText = new EditText(this);
+        nombrePedidoText.setHint("Nombre para guardar el pedido");
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Realizado pedido")
+                .setMessage("¿Quieres guardar este pedido como favorito?")
+                .setView(nombrePedidoText)
+                .setCancelable(false)
+                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Modificar pedido fav = true si se ha introducido un nombre
+                        //Intent a Main Activity
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Intent a Main Activity
+                    }
+                })
+                .create();
+        dialog.show();
     }
 }
