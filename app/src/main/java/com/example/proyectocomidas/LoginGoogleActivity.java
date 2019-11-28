@@ -258,7 +258,7 @@ public class LoginGoogleActivity extends AppCompatActivity implements
         });
         // We set parameters to the GraphRequest using a Bundle.
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,email,picture.width(200)");
+        parameters.putString("fields", "id,nombre,email,picture.width(200)");
         request.setParameters(parameters);
         // Initiate the GraphRequest
         request.executeAsync();

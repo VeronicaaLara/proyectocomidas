@@ -6,4 +6,6 @@
     <string name="fb_login_protocol_scheme">fb763435347461116</string>
     <string name="product_add">¡Producto añadido con éxito!</string>
 
+    <string name="updated">%s updated.</string>
+
 </resources>
