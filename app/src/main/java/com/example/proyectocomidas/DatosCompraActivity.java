@@ -251,6 +251,11 @@ public class DatosCompraActivity extends AppCompatActivity {
                            firebaseFirestore.collection("PedidoProductos").add(pp).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                @Override
                                public void onSuccess(DocumentReference documentReference) {
+
+                                   SharedPreferences.Editor editor = preferences.edit();
+                                   editor.clear();
+                                   editor.commit();
+
                                    Toast toast1 = Toast.makeText(getApplicationContext(), "Pedido realizado", Toast.LENGTH_SHORT);
                                    toast1.show();
                                }

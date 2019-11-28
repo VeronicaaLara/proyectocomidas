@@ -49,10 +49,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void initUI(){
 
+        /*
         SharedPreferences preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.commit();
+        */
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
