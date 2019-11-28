@@ -46,7 +46,8 @@ public class PedidosFavoritosActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot document: task.getResult()){
                         String id = document.getId();
                         String name = document.getString("nombrePedido");
-                        orders.add(new PedidoFavorito(id, name));
+                        String comments = document.getString("comentarios");
+                        orders.add(new PedidoFavorito(id, name, comments));
                     }
 
                     ordersAdapter = new PedidosFavortitosAdapter(PedidosFavoritosActivity.this, orders);

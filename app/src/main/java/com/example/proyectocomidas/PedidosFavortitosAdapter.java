@@ -15,11 +15,13 @@ public class PedidosFavortitosAdapter extends RecyclerView.Adapter<PedidosFavort
     public class ViewHolderOrdersFav extends RecyclerView.ViewHolder{
 
         TextView tvNameOrder;
+        TextView tvCommentsOrder;
 
         public ViewHolderOrdersFav(View itemView){
             super(itemView);
 
             tvNameOrder = itemView.findViewById(R.id.nombrePedido);
+            tvCommentsOrder = itemView.findViewById(R.id.observacionesPedido);
         }
     }
 
@@ -43,6 +45,7 @@ public class PedidosFavortitosAdapter extends RecyclerView.Adapter<PedidosFavort
     @Override
     public void onBindViewHolder(@NonNull ViewHolderOrdersFav viewHolderOrdersFav, int i) {
         viewHolderOrdersFav.tvNameOrder.setText(orders.get(i).getNombre());
+        viewHolderOrdersFav.tvCommentsOrder.setText(orders.get(i).getComments());
     }
 
     @Override
