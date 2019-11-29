@@ -10,10 +10,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.proyectocomidas.adapters.CategoriaAdapter;
+import com.example.proyectocomidas.adapters.ComentariosAdapter;
 import com.example.proyectocomidas.models.Categoria;
+import com.example.proyectocomidas.models.Comentario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private CategoriaAdapter categoriaAdapter;
     private FirebaseFirestore mFirestore;
 
-    FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+
+    Button prueba;
 
 
     @Override
@@ -46,12 +50,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUI(){
-        /*
-        SharedPreferences preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
-        */
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -62,6 +60,24 @@ public class MainActivity extends AppCompatActivity {
         rvCategorias.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         boolean flag = false; // valor por defecto si aun no se ha tomado el username
+
+
+        prueba = (Button) findViewById(R.id.btnPrueba);
+
+        prueba.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.e("llega","siiii");
+
+
+                Intent intent = new Intent(MainActivity.this, ComentariosActivity.class);
+                startActivity(intent);
+
+
+
+            }
+        });
 
 
 

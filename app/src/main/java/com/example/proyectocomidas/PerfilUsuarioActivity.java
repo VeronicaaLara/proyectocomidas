@@ -149,16 +149,13 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                 if (!Strings.isEmptyOrWhitespace(nombre.getText().toString()) && !Strings.isEmptyOrWhitespace(direccion.getText().toString()) && !Strings.isEmptyOrWhitespace(telefono.getText().toString())) {
 
                     final String nombreee = nombre.getText().toString().trim();
-                   // final String emailll = email.getText().toString().trim();
                     final String direccionnn = direccion.getText().toString().trim();
                     final String telefonooo = telefono.getText().toString().trim();
-                   // final String passworddd = password.getText().toString().trim();
 
                     Usuario user = new Usuario(nombreee, firebaseAuth.getCurrentUser().getEmail(),direccionnn,telefonooo);
 
                     editarUsuario(user);
 
-                    //Log.e("SALIDA", "LLEGA!!");
 
 
                 } else {
