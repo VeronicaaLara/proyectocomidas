@@ -27,10 +27,12 @@ public class PedidosFavortitosAdapter extends RecyclerView.Adapter<PedidosFavort
 
     private Context context;
     private List<PedidoFavorito> orders;
+    private CustomClickPedido listener;
 
-    public PedidosFavortitosAdapter(Context context, List<PedidoFavorito> orders){
+    public PedidosFavortitosAdapter(Context context, List<PedidoFavorito> orders, CustomClickPedido listener){
         this.context = context;
         this.orders = orders;
+        this.listener = listener;
     }
 
     @NonNull
@@ -38,6 +40,13 @@ public class PedidosFavortitosAdapter extends RecyclerView.Adapter<PedidosFavort
     public ViewHolderOrdersFav onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_pedido_favorito, viewGroup, false);
         final ViewHolderOrdersFav vhof = new ViewHolderOrdersFav(view);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onClick(view, vhof.getAdapterPosition());
+            }
+        });
 
         return vhof;
     }
