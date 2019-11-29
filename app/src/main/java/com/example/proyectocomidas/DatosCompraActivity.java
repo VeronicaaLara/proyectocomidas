@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -39,6 +40,8 @@ public class DatosCompraActivity extends AppCompatActivity {
     Spinner spinner;
     Button btnPedido;
     SharedPreferences preferences;
+    private String idUser;
+    private FirebaseAuth mAuth;
 
 
 
@@ -59,6 +62,16 @@ public class DatosCompraActivity extends AppCompatActivity {
         observacionesText = findViewById(R.id.observacionesText);
         btnPedido = findViewById(R.id.btnPedido);
         spinner = findViewById(R.id.horaSelect);
+        mAuth = FirebaseAuth.getInstance();
+
+        firebaseFirestore.collection("Usuarios").whereEqualTo("email", mAuth.getCurrentUser().getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    idUser = task.getResult().getDocuments().get(0).getId();
+                }
+            }
+        });
 
         ArrayList<String> horas = getHours();
 
@@ -269,28 +282,51 @@ public class DatosCompraActivity extends AppCompatActivity {
         }
     }
 
-    private void makeDialog(String idPedido){
-        final EditText nombrePedidoText = new EditText(this);
-        nombrePedidoText.setHint("Nombre para guardar el pedido");
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Realizado pedido")
-                .setMessage("¿Quieres guardar este pedido como favorito?")
-                .setView(nombrePedidoText)
-                .setCancelable(false)
-                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+    private void makeDialog(final String idPedido){
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(DatosCompraActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_pedido_favorito, null);
+        final EditText tvOrderName = mView.findViewById(R.id.nombrePedidoFavorito);
+        Button btnSave = mView.findViewById(R.id.guardarPedidoFavorito);
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseFirestore.collection("Pedidos").document(idPedido).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Modificar pedido fav = true si se ha introducido un nombre
-                        //Intent a Main Activity
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            Timestamp dateOrder = task.getResult().getTimestamp("fechaPedido");
+                            String name = task.getResult().getString("nombre");
+                            String address = task.getResult().getString("direccion");
+                            String phone = task.getResult().getString("telefono");
+                            String time = task.getResult().getString("horaRecogida");
+                            String comments = task.getResult().getString("comentarions");
+                            String orderName = tvOrderName.getText().toString().trim();
+                            Pedido order = new Pedido(dateOrder, idUser, name, orderName, address, phone, time, comments, true);
+                            firebaseFirestore.collection("Pedidos").document(idPedido).set(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Intent intent = new Intent(DatosCompraActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
                     }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Intent a Main Activity
-                    }
-                })
-                .create();
-        dialog.show();
+                });
+            }
+        });
+
+        mBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Intent intent = new Intent(DatosCompraActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mBuilder.setView(mView);
+        AlertDialog alertDialog = mBuilder.create();
+        alertDialog.show();
+
     }
 }

@@ -13,9 +13,9 @@ public class Pedido {
     private String comentarios;
     private Boolean favorito;
 
-    public Pedido(Timestamp fechaPedido, String nombre, String nombrePedido, String direccion, String telefono, String horaRecogida, String comentarios, Boolean favorito) {
+    public Pedido(Timestamp fechaPedido, String idUser, String nombre, String nombrePedido, String direccion, String telefono, String horaRecogida, String comentarios, Boolean favorito) {
         this.fechaPedido = fechaPedido;
-        this.idUser = "";
+        this.idUser = idUser;
         this.nombre = nombre;
         this.nombrePedido = nombrePedido;
         this.direccion = direccion;
