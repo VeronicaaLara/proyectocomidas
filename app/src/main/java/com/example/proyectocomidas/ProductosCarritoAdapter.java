@@ -31,7 +31,7 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
     public class ViewHolderCestaCarrito extends RecyclerView.ViewHolder{
 
         ImageView imgProduct;
-        TextView tvName;
+        TextView tvName, tvPrecio;
         Button btnDelete;
 
         public ViewHolderCestaCarrito(View itemView){
@@ -39,6 +39,7 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
 
             imgProduct = itemView.findViewById(R.id.imagenProductoCesta);
             tvName = itemView.findViewById(R.id.nombreProductoCesta);
+            tvPrecio = itemView.findViewById(R.id.precioProductoCesta);
             btnDelete = itemView.findViewById(R.id.btnEliminarProductoCesta);
         }
     }
@@ -74,7 +75,7 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
     public void onBindViewHolder(@NonNull final ProductosCarritoAdapter.ViewHolderCestaCarrito viewHolderCestaCarrito, final int i) {
 
         viewHolderCestaCarrito.tvName.setText(products.get(i).getNombre());
-
+        viewHolderCestaCarrito.tvPrecio.setText(products.get(i).getPrecio() + "€");
         String image = products.get(i).getImagen();
         mStorage.getReference().child(image).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override

@@ -1,6 +1,8 @@
 package com.example.proyectocomidas;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,12 +48,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUI(){
+
         /*
         SharedPreferences preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.commit();
         */
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -62,9 +66,6 @@ public class MainActivity extends AppCompatActivity {
         rvCategorias.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         boolean flag = false; // valor por defecto si aun no se ha tomado el username
-
-
-
     }
 
     private void obtenerCategorias(){

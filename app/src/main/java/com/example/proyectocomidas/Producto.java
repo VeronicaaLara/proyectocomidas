@@ -7,10 +7,20 @@ public class Producto {
     private String imagen;
     private Boolean disponible;
     private String idCategorias;
-    private Double precio;
+    private double precio;
+
 
     public Producto(String id, String nombre, String descripcion, String imagen, Boolean disponible, String idCategorias, Double precio) {
         this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.imagen = imagen;
+        this.disponible = disponible;
+        this.idCategorias = idCategorias;
+        this.precio = precio;
+    }
+
+    public Producto(String nombre, String descripcion, String imagen, Boolean disponible, String idCategorias, Double precio) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.imagen = imagen;

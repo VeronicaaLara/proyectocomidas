@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -17,8 +18,10 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
@@ -85,6 +88,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         btnRegister = findViewById(R.id.btnRegister);
         btnGoogle = findViewById(R.id.btnGoogle);
         mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
     }
 
     private void configureGoogle(){
@@ -106,12 +110,29 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (requestCode == CODE){
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()){
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+                GoogleSignInAccount account = result.getSignInAccount();
+                AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(),null);
+                firebaseAuthWithGoogle(credential,account);
             }else{
                 Toast.makeText(getApplicationContext(), "Inicio de sesión fallido", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+
+    private void firebaseAuthWithGoogle(AuthCredential credential, final GoogleSignInAccount account){
+        mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+
+                }else{
+                    Toast.makeText(getApplicationContext(),"Autentiación fallida",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
