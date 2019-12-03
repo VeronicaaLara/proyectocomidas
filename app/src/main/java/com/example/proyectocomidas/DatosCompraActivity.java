@@ -64,15 +64,6 @@ public class DatosCompraActivity extends AppCompatActivity {
         spinner = findViewById(R.id.horaSelect);
         mAuth = FirebaseAuth.getInstance();
 
-        firebaseFirestore.collection("Usuarios").whereEqualTo("email", mAuth.getCurrentUser().getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    idUser = task.getResult().getDocuments().get(0).getId();
-                }
-            }
-        });
-
         ArrayList<String> horas = getHours();
 
         spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, horas));
@@ -106,6 +97,7 @@ public class DatosCompraActivity extends AppCompatActivity {
                       String email = task.getResult().getDocuments().get(0).getData().get("email").toString();
                       String direccion = task.getResult().getDocuments().get(0).getData().get("direccion").toString();
                       String telefono = task.getResult().getDocuments().get(0).getData().get("telefono").toString();
+                      idUser = task.getResult().getDocuments().get(0).getId();
 
                       if(!nombre.isEmpty()){
                           nombreText.setText(nombre);
@@ -287,6 +279,11 @@ public class DatosCompraActivity extends AppCompatActivity {
         View mView = getLayoutInflater().inflate(R.layout.dialog_pedido_favorito, null);
         final EditText tvOrderName = mView.findViewById(R.id.nombrePedidoFavorito);
         Button btnSave = mView.findViewById(R.id.guardarPedidoFavorito);
+
+        if (idUser == null){
+            btnSave.setEnabled(false);
+            tvOrderName.setEnabled(false);
+        }
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
