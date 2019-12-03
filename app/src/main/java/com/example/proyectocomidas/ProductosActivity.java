@@ -92,7 +92,12 @@ public class ProductosActivity extends AppCompatActivity {
                             products.add(new Producto(id, name, description, image, available, idCatgeory, precio));
                         }
 
-                        productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth, mProductsShop);
+                        productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth, mProductsShop, new CustomClickPedido() {
+                            @Override
+                            public void onClick(View view, int index) {
+                                montarModal(index);
+                            }
+                        });
                         rvProducts.setAdapter(productAdapter);
 
                         String json = preferences.getString("productos", "");
@@ -120,7 +125,12 @@ public class ProductosActivity extends AppCompatActivity {
                             products.add(new Producto(id, name, description, image, available, idCatgeory, precio));
                         }
 
-                        productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth, mProductsShop);
+                        productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth, mProductsShop, new CustomClickPedido() {
+                            @Override
+                            public void onClick(View view, int index) {
+                                montarModal(index);
+                            }
+                        });
                         rvProducts.setAdapter(productAdapter);
 
                         String json = preferences.getString("productos", "");
@@ -310,5 +320,16 @@ public class ProductosActivity extends AppCompatActivity {
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void montarModal(int index){
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(ProductosActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.producto_dialog, null);
+        products.get(index).getNombre();
+
+        mBuilder.setView(mView);
+        AlertDialog alertDialog = mBuilder.create();
+        alertDialog.show();
+
     }
 }

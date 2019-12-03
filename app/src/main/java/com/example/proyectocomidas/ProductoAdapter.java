@@ -54,7 +54,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
     private List<Producto> productsAdded;
     private ProductosCompra productsShop;
     private SharedPreferences preferences;
-
+    private CustomClickPedido listener;
 
     final long ONE_MEGABYTE = 1024 * 1024;
 
@@ -91,7 +91,8 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
         }
     };
 
-    public ProductoAdapter(Context context, List<Producto> products, FirebaseStorage mStorage, FirebaseAuth mAuth, ProductosCompra productsShop){
+    public ProductoAdapter(Context context, List<Producto> products, FirebaseStorage mStorage, FirebaseAuth mAuth, ProductosCompra productsShop, CustomClickPedido listener){
+        this.listener = listener;
         this.context = context;
         this.products = products;
         fullProducts = new ArrayList<>(products);
@@ -101,6 +102,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
         mAuth.signInAnonymously();
         this.productsShop = productsShop;
         preferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+
     }
 
     @NonNull
@@ -108,6 +110,12 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
     public ViewHolderProduct onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_producto, viewGroup, false);
         final ViewHolderProduct vhp = new ViewHolderProduct(view);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onClick(view, vhp.getAdapterPosition());
+            }
+        });
 
         return vhp;
     }
