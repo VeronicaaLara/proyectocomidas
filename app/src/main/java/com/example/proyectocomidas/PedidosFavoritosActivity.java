@@ -79,6 +79,8 @@ public class PedidosFavoritosActivity extends AppCompatActivity {
                     ordersAdapter = new PedidosFavortitosAdapter(PedidosFavoritosActivity.this, orders, new CustomClickPedido() {
                         @Override
                         public void onClick(View view, int index) {
+                            idProducts.clear();
+                            productsOrder.clear();
                             String id = orders.get(index).getId();
                             mFirestore.collection("PedidoProductos").whereEqualTo("idPedido", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
@@ -89,9 +91,9 @@ public class PedidosFavoritosActivity extends AppCompatActivity {
                                             idProducts.add(idProducto);
                                         }
 
-                                        for (String idProduct: idProducts){
-                                            for (Producto product: products){
-                                                if (idProduct.equals(product.getId())){
+                                        for (String idProduct: idProducts) {
+                                            for (Producto product : products) {
+                                                if (idProduct.equals(product.getId())) {
                                                     productsOrder.add(product);
                                                 }
                                             }
