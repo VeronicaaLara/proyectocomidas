@@ -122,12 +122,7 @@ public class DatosCompraActivity extends AppCompatActivity {
                       Log.e("Usuario", task.getResult().getDocuments().get(0).getData().toString());
 
                     } else {
-                        if(!firebaseAuth.getCurrentUser().getDisplayName().isEmpty()){
-                           nombreText.setText(firebaseAuth.getCurrentUser().getDisplayName());
-                        }
-                        emailText.setText(firebaseAuth.getCurrentUser().getEmail());
-                        emailText.setEnabled(false);
-                        Log.e("Usuario", "Logueado con google");
+                        Log.e("Error", "No se ha encontrado el usuario");
                     }
                 }
             }
@@ -297,7 +292,7 @@ public class DatosCompraActivity extends AppCompatActivity {
                             String address = task.getResult().getString("direccion");
                             String phone = task.getResult().getString("telefono");
                             String time = task.getResult().getString("horaRecogida");
-                            String comments = task.getResult().getString("comentarions");
+                            String comments = task.getResult().getString("comentarios");
                             String orderName = tvOrderName.getText().toString().trim();
                             Pedido order = new Pedido(dateOrder, idUser, name, orderName, address, phone, time, comments, true);
                             firebaseFirestore.collection("Pedidos").document(idPedido).set(order).addOnCompleteListener(new OnCompleteListener<Void>() {

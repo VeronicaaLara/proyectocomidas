@@ -141,7 +141,9 @@ public class ProductosActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                productAdapter.getFilter().filter(charSequence);
+                if(charSequence != null){
+                    productAdapter.getFilter().filter(charSequence);
+                }
             }
 
             @Override

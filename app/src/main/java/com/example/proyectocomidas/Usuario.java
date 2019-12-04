@@ -16,6 +16,20 @@ public class Usuario {
 
     }
 
+    public Usuario(String nombre, String email) {
+        this.nombre = nombre;
+        this.email = email;
+        this.direccion = "";
+        this.telefono = "";
+    }
+
+    public Usuario(String email) {
+        this.nombre = "";
+        this.email = email;
+        this.direccion = "";
+        this.telefono = "";
+    }
+
     public String getNombre() {
         return nombre;
     }
