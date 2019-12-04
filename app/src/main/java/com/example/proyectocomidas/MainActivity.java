@@ -62,37 +62,6 @@ public class MainActivity extends AppCompatActivity {
         boolean flag = false; // valor por defecto si aun no se ha tomado el username
 
 
-        prueba = (Button) findViewById(R.id.btnPrueba);
-
-        prueba.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(MainActivity.this, PerfilUsuarioActivity.class);
-                startActivity(intent);
-
-
-
-            }
-        });
-
-        prueba2 = (Button) findViewById(R.id.btnPrueba2);
-
-        prueba2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(MainActivity.this, ComentariosActivity.class);
-                startActivity(intent);
-
-
-            }
-        });
-
-
-
     }
 
     private void obtenerCategorias(){
