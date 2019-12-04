@@ -4,10 +4,14 @@ public class Comentario {
 
 
     private String comentario;
+    private String usuario;
 
 
-    public Comentario(String comentario) {
+
+    public Comentario(String comentario,String usuario) {
         this.comentario = comentario;
+        this.usuario = usuario;
+
 
 
     }
@@ -20,10 +24,19 @@ public class Comentario {
         this.comentario = comentario;
     }
 
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
+
     @Override
     public String toString() {
         return "Comentario{" +
                 "comentario='" + comentario + '\'' +
+                ", usuario='" + usuario + '\'' +
                 '}';
     }
 }

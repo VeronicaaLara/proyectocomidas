@@ -13,34 +13,27 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ComentariosActivity">
 
+
+        </activity>
+
+        <activity android:name=".PedidosFavoritosActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".CestaCompraActivity" />
+        <activity android:name=".LoginActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-
         </activity>
-        <activity android:name=".PedidosFavoritosActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".CestaCompraActivity" />
-        <activity android:name=".LoginActivity">
-
-
-        </activity>
-
-
-
 
         <activity android:name=".MainActivity"></activity>
         <activity
             android:name=".ProductosActivity"
             android:theme="@style/NoActionBar" />
-        <activity android:name=".PerfilUsuarioActivity">
-
-
-
-        </activity>
+        <activity android:name=".PerfilUsuarioActivity"></activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

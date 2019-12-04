@@ -43,6 +43,8 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.
     public void onBindViewHolder(@NonNull ComentariosAdapter.ViewHolderCategoria viewHolderCategoria, final int i) {
 
         viewHolderCategoria.tvComentario.setText(comentario.get(i).getComentario());
+        viewHolderCategoria.tvUsuarioComentario.setText("Usuario: " + comentario.get(i).getUsuario());
+
 
 
 
@@ -62,6 +64,9 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.
 
         TextView tvComentario;
 
+        TextView tvUsuarioComentario;
+
+
         ImageView ivImagen;
 
         LinearLayout filaComentario;
@@ -71,6 +76,8 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.
             super(itemView);
 
             tvComentario = itemView.findViewById(R.id.tvComentario);
+            tvUsuarioComentario = itemView.findViewById(R.id.tvUsuarioComentario);
+
             ivImagen = itemView.findViewById(R.id.ivImagenCategoria);
             filaComentario = itemView.findViewById(R.id.lyfilaComentarios);
 

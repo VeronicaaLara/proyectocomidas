@@ -14,7 +14,14 @@
         android:id="@+id/btnPrueba"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="INICIAR SESIÓN"
+        android:text="Ir perfil"
+        android:textSize="20dp"
+        android:layout_alignParentStart="true"/>
+    <Button
+        android:id="@+id/btnPrueba2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Ir comentarios"
         android:textSize="20dp"
         android:layout_alignParentStart="true"/>
 

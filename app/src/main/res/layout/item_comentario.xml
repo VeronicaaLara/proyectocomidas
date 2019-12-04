@@ -22,7 +22,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textSize="20dp"
+            android:textSize="16dp"
+            android:textColor="#423D3D"/>
+
+        <TextView
+            android:id="@+id/tvUsuarioComentario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="16dp"
             android:textColor="#423D3D"/>
 
     </LinearLayout>

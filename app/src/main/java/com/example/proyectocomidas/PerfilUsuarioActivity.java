@@ -39,7 +39,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
     ProgressDialog dialog;
     View mView;
     EditText passwordAnterior, nuevoPassword, confirmarPassword;
-    Button btnCambiarContraseña;
+    Button btn_CambiarContraseña;
     AlertDialog alertDialog;
 
 
@@ -76,9 +76,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
         btnGuardar.setOnClickListener(this);
         btnContraseña.setOnClickListener(this);
 
-
         obtenerDatosUsuario();
-
 
     }
 
@@ -172,13 +170,13 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                 passwordAnterior = mView.findViewById(R.id.antiguoPassword);
                 nuevoPassword = mView.findViewById(R.id.nuevoPassword);
                 confirmarPassword = mView.findViewById(R.id.confirmarPassword);
-                btnCambiarContraseña = mView.findViewById(R.id.cambiarPassword_btn);
+                btn_CambiarContraseña = mView.findViewById(R.id.cambiarPassword_btn);
 
                 mBuilder.setView(mView);
                 alertDialog = mBuilder.create();
                 alertDialog.show();
 
-                btnCambiarContraseña.setOnClickListener(new View.OnClickListener() {
+                btn_CambiarContraseña.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(!Strings.isEmptyOrWhitespace(passwordAnterior.getText().toString()) && !Strings.isEmptyOrWhitespace(nuevoPassword.getText().toString()) && !Strings.isEmptyOrWhitespace(confirmarPassword.getText().toString())){
@@ -246,7 +244,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
 
                     Toast.makeText(getApplicationContext(), "La contraseña antigua que ha introducido es errónea", Toast.LENGTH_LONG).show();
                     dialog.dismiss();
-                    alertDialog.dismiss();
+
                 }
             }
         });
