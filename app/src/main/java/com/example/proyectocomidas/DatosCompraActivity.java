@@ -63,6 +63,10 @@ public class DatosCompraActivity extends AppCompatActivity {
         btnPedido = findViewById(R.id.btnPedido);
         spinner = findViewById(R.id.horaSelect);
         mAuth = FirebaseAuth.getInstance();
+        preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+
+        String comments = preferences.getString("observaciones", "");
+        observacionesText.setText(comments);
 
         ArrayList<String> horas = getHours();
 
@@ -232,8 +236,8 @@ public class DatosCompraActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Debes seleccionar una hora de recogida", Toast.LENGTH_SHORT).show();
             } else {
 
-                preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
                 String json = preferences.getString("productos", "");
+
                 final List<Producto> productos = ProductosCompra.fromJSON(json).getListaProductos();
 
                 Timestamp fechaPedido = new Timestamp(new Date());
