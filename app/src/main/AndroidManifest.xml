@@ -18,13 +18,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
+            
         </activity>
 
         <activity android:name=".PedidosFavoritosActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".CestaCompraActivity" />
         <activity android:name=".LoginActivity">
+
 
 
         </activity>

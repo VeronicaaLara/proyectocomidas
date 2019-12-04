@@ -35,10 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private CategoriaAdapter categoriaAdapter;
     private FirebaseFirestore mFirestore;
 
-
-    Button prueba;
-    Button prueba2;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

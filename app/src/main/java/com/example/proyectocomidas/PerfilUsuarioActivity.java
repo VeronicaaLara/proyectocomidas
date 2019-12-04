@@ -103,7 +103,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                         PerfilUsuarioActivity.this.direccion.setText(direccion);
                         PerfilUsuarioActivity.this.telefono.setText(telefono);
 
-                        Log.e("EMAIL usuario logueado", email);
+                        Log.e("EMAIL nombreUsuario logueado", email);
 
                     }
 
@@ -255,7 +255,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
 
     private void editarUsuario(final Usuario user){
 
-            // Para editar el usuario y modificar sus datos
+            // Para editar el nombreUsuario y modificar sus datos
 
             dialog = ProgressDialog.show(this, "",
                     "Cargando... espere por favor", true);

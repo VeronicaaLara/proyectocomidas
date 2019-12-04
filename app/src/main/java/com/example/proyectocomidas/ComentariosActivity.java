@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -28,9 +27,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
@@ -105,8 +101,8 @@ public class ComentariosActivity extends AppCompatActivity implements View.OnCli
 
            addComentario.setVisibility(View.GONE);
 
-           // Pero si esta logueado, obtengo el nombre del usuario logueado para pasarselo al modal y asi luego obtener tambien el nombre del usuario
-           //que ha ecrito el comentario
+           // Pero si esta logueado, obtengo el nombre del nombreUsuario logueado para pasarselo al modal y asi luego poder obtener tambien el nombre del nombreUsuario
+           //que ha escrito el comentario
 
        } else {
            // OBTENGO el nombre DEL USUARIO LOGUEADO
@@ -116,12 +112,11 @@ public class ComentariosActivity extends AppCompatActivity implements View.OnCli
                    if (task.isSuccessful()){
                        for (QueryDocumentSnapshot document: task.getResult()){
 
-
                            String nombre = document.getString("nombre");
 
                            usuario = nombre;
 
-                           Log.e("EMAIL usuario logueado", nombre);
+                           Log.e("nombre nombreUsuario", nombre);
 
                        }
 
@@ -133,13 +128,6 @@ public class ComentariosActivity extends AppCompatActivity implements View.OnCli
        }
 
     }
-
-    private void obtenerUsuario() {
-
-
-
-    }
-
 
 
     private void obtenerComentarios() {
@@ -191,8 +179,8 @@ public class ComentariosActivity extends AppCompatActivity implements View.OnCli
 
                             if(!Strings.isEmptyOrWhitespace(escribeComentario.getText().toString())) {
 
-                                //Envio el comentario al modal y el nombre de usuario que lo ha escrito
-                                Comentario user = new Comentario(escribeComentario.getText().toString(),usuario);
+                                //Envio el comentario al modal y el nombre de nombreUsuario que lo ha escrito
+                                Comentario user = new Comentario(escribeComentario.getText().toString(), usuario);
 
                                 addComentario(user);
 
