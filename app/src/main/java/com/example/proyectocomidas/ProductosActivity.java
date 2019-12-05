@@ -1,9 +1,10 @@
 package com.example.proyectocomidas;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +20,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import com.facebook.share.Share;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,12 +33,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductosActivity extends AppCompatActivity {
 
+    private static final long ONE_MEGABYTE = 1024 * 1024;
     private List<Producto> products;
     private RecyclerView rvProducts;
     private ProductoAdapter productAdapter;
@@ -48,7 +52,12 @@ public class ProductosActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private ProductosCompra mProductsShop;
     private SharedPreferences preferences;
-
+    private ArrayList ingredientes;
+    private ArrayList alergenos;
+    private AlergenoAdapter alergenoAdapter;
+    private IngredienteAdapter ingredienteAdapter;
+    private ListView lvIngredientes;
+    private ListView lvAlergenos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +83,10 @@ public class ProductosActivity extends AppCompatActivity {
         products = new ArrayList<>();
         mProductsShop = new ProductosCompra();
         preferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
-
+        ingredientes = new ArrayList<>();
+        alergenos = new ArrayList<>();
+        alergenoAdapter = new AlergenoAdapter(this, alergenos);
+        ingredienteAdapter = new IngredienteAdapter(this, ingredientes);
         if(nameCategory.equals("Todo")){
 
             mFirestore.collection("Productos").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -322,14 +334,64 @@ public class ProductosActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void rellenaIngredientes(){
+        mFirestore.collection("Ingredientes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        String id = document.getId();
+                        String name = document.getString("nombre");
+                        ingredientes.add(new Ingrediente(name, id));
+                        Log.e("prueba", name);
+                    }
+                    lvIngredientes.setAdapter(ingredienteAdapter);
+                }
+            }
+        });
+    }
+
+    public void rellenaAlergenos(){
+        mFirestore.collection("Alergenos").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        String id = document.getId();
+                        String name = document.getString("nombre");
+                        Log.e("prueba", name);
+                        alergenos.add(new Ingrediente(name, id));
+                    }
+                    lvAlergenos.setAdapter(ingredienteAdapter);
+                }
+            }
+        });
+    }
     public void montarModal(int index){
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(ProductosActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.producto_dialog, null);
-        products.get(index).getNombre();
+        TextView tvName = mView.findViewById(R.id.nombre_producto);
+        final ImageView ivImage = mView.findViewById(R.id.img_producto);
+        lvIngredientes = mView.findViewById(R.id.ingrediente_producto);
+        lvAlergenos = mView.findViewById(R.id.alergeno_producto);
 
+        tvName.setText(products.get(index).getNombre());
+        String image = products.get(index).getImagen();
+        mStorage.getReference().child(image).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                ivImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, 525, 525, false));
+            }
+        });
+        rellenaIngredientes();
+        rellenaAlergenos();
         mBuilder.setView(mView);
-        AlertDialog alertDialog = mBuilder.create();
+            AlertDialog alertDialog = mBuilder.create();
         alertDialog.show();
 
-    }
+        }
 }
+
+
+
