@@ -31,7 +31,8 @@
             </intent-filter>
             
         </activity>
-        <activity android:name=".ComentariosActivity"></activity>
+        <activity android:name=".ComentariosActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ProductosActivity"
             android:theme="@style/AppTheme.NoActionBar" />

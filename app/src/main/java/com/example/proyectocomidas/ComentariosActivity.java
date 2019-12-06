@@ -65,14 +65,10 @@ public class ComentariosActivity extends AppCompatActivity implements View.OnCli
 
         initUI();
 
-
     }
 
     @SuppressLint("WrongViewCast")
     private void initUI() {
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         mFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -230,38 +226,5 @@ public class ComentariosActivity extends AppCompatActivity implements View.OnCli
 
 
     }
-
-
-
-
-
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.btnPerfil:
-
-                Intent intent = new Intent(ComentariosActivity.this, PerfilUsuarioActivity.class);
-                startActivity(intent);
-
-                return true;
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
 
 }

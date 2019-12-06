@@ -107,6 +107,7 @@ public class ProductosActivity extends AppCompatActivity implements NavigationVi
         } else if (id == R.id.itemFavoritos) {
             startActivity(new Intent(ProductosActivity.this, PedidosFavoritosActivity.class));
         } else if (id == R.id.itemComentarios) {
+            startActivity(new Intent(ProductosActivity.this, ComentariosActivity.class));
         } else if (id == R.id.itemCarrito) {
             startActivity(new Intent(ProductosActivity.this, CestaCompraActivity.class));
         } else if (id == R.id.itemCerrarSesion) {
