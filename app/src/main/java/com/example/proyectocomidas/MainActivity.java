@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,14 +31,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private List<Categoria> categorias;
     private RecyclerView rvCategorias;
     private CategoriaAdapter categoriaAdapter;
     private FirebaseFirestore mFirestore;
-
-    FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseAuth mAuth;
 
 
     @Override
@@ -42,9 +44,67 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initMenu();
         initUI();
         obtenerCategorias();
 
+    }
+
+    private void initMenu(){
+        mAuth = FirebaseAuth.getInstance();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        if(mAuth.getCurrentUser() != null){
+            navigationView.inflateMenu(R.menu.menu_usuario);
+        }else{
+            navigationView.inflateMenu(R.menu.menu_anonimo);
+        }
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.itemPerfil) {
+            startActivity(new Intent(MainActivity.this, PerfilUsuarioActivity.class));
+        } else if (id == R.id.itemLogin) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        } else if (id == R.id.itemFavoritos) {
+            startActivity(new Intent(MainActivity.this, PedidosFavoritosActivity.class));
+        } else if (id == R.id.itemComentarios) {
+        } else if (id == R.id.itemCarrito) {
+            startActivity(new Intent(MainActivity.this, CestaCompraActivity.class));
+        } else if (id == R.id.itemCerrarSesion) {
+            mAuth.signOut();
+            Intent intent=new Intent();
+            intent.setClass(this, this.getClass());
+            startActivity(intent);
+            this.finish();
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     private void initUI(){
@@ -56,9 +116,6 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
         */
 
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         mFirestore = FirebaseFirestore.getInstance();
         rvCategorias = findViewById(R.id.rvCategorias);
@@ -90,37 +147,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.btnPerfil:
-
-                Intent intent = new Intent(MainActivity.this, PerfilUsuarioActivity.class);
-                startActivity(intent);
-
-                return true;
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
 
 
 

@@ -5,6 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,7 +37,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductosActivity extends AppCompatActivity {
+public class ProductosActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private List<Producto> products;
     private RecyclerView rvProducts;
@@ -45,7 +49,6 @@ public class ProductosActivity extends AppCompatActivity {
     private String nameCategory;
     private EditText etFilter;
     private Button btnMenu;
-    private Toolbar mToolbar;
     private ProductosCompra mProductsShop;
     private SharedPreferences preferences;
 
@@ -58,14 +61,68 @@ public class ProductosActivity extends AppCompatActivity {
         nameCategory = getIntent().getStringExtra("nombreCategoria");
         idCategory = getIntent().getStringExtra("idCategoria");
 
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-
+        initMenu();
         initUI();
     }
 
-    private void initUI(){
+    private void initMenu(){
         mAuth = FirebaseAuth.getInstance();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        if(mAuth.getCurrentUser() != null){
+            navigationView.inflateMenu(R.menu.menu_usuario);
+        }else{
+            navigationView.inflateMenu(R.menu.menu_anonimo);
+        }
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.itemPerfil) {
+            startActivity(new Intent(ProductosActivity.this, PerfilUsuarioActivity.class));
+        } else if (id == R.id.itemLogin) {
+            startActivity(new Intent(ProductosActivity.this, LoginActivity.class));
+        } else if (id == R.id.itemFavoritos) {
+            startActivity(new Intent(ProductosActivity.this, PedidosFavoritosActivity.class));
+        } else if (id == R.id.itemComentarios) {
+        } else if (id == R.id.itemCarrito) {
+            startActivity(new Intent(ProductosActivity.this, CestaCompraActivity.class));
+        } else if (id == R.id.itemCerrarSesion) {
+            mAuth.signOut();
+            mAuth.signOut();
+            Intent intent=new Intent();
+            intent.setClass(this, this.getClass());
+            startActivity(intent);
+            this.finish();            }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void initUI(){
         mFirestore = FirebaseFirestore.getInstance();
         mStorage = FirebaseStorage.getInstance();
         rvProducts = findViewById(R.id.rvProductos);
@@ -295,22 +352,4 @@ public class ProductosActivity extends AppCompatActivity {
         builder.create();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_products, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.action_shop){
-            Intent intent = new Intent(ProductosActivity.this, CestaCompraActivity.class);
-            startActivity(intent);
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

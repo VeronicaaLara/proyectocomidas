@@ -32,7 +32,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button btnCerrar, btnGuardar, btnContraseña;
+    Button btnGuardar, btnContraseña;
     EditText nombre, email, direccion, telefono;
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth firebaseAuth;
@@ -56,9 +56,6 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
 
     private void init(){
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         this.firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -68,11 +65,9 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
         direccion = findViewById(R.id.direccionUsuario);
         telefono = findViewById(R.id.telefonoUsuario);
 
-        btnCerrar = findViewById(R.id.btnCerrarSesion);
         btnGuardar = findViewById(R.id.btnGuardarCambios);
         btnContraseña = findViewById(R.id.btnCambiarContraseña);
 
-        btnCerrar.setOnClickListener(this);
         btnGuardar.setOnClickListener(this);
         btnContraseña.setOnClickListener(this);
 
@@ -115,29 +110,6 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
         });
 
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.btn_atras, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        // Al pulsar la fecha hacia atras que esta en el menu de arriba
-
-        if(id == R.id.back){
-
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-
-        }
-
-        return true;
-    }
-
 
 
     @Override
@@ -200,15 +172,6 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                         }
                     }
                 });
-
-                break;
-
-            case R.id.btnCerrarSesion:
-
-                firebaseAuth.signOut();
-
-                Intent intent = new Intent(PerfilUsuarioActivity.this, LoginActivity.class);
-                startActivity(intent);
 
                 break;
 
@@ -291,11 +254,6 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                 }
             });
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        // your code.
     }
 
 
