@@ -29,7 +29,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            
         </activity>
+        <activity android:name=".ComentariosActivity"></activity>
         <activity
             android:name=".ProductosActivity"
             android:theme="@style/AppTheme.NoActionBar" />

@@ -39,7 +39,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
     ProgressDialog dialog;
     View mView;
     EditText passwordAnterior, nuevoPassword, confirmarPassword;
-    Button btnCambiarContraseña;
+    Button btn_CambiarContraseña;
     AlertDialog alertDialog;
 
 
@@ -71,9 +71,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
         btnGuardar.setOnClickListener(this);
         btnContraseña.setOnClickListener(this);
 
-
         obtenerDatosUsuario();
-
 
     }
 
@@ -100,7 +98,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                         PerfilUsuarioActivity.this.direccion.setText(direccion);
                         PerfilUsuarioActivity.this.telefono.setText(telefono);
 
-                        Log.e("EMAIL usuario logueado", email);
+                        Log.e("EMAIL nombreUsuario logueado", email);
 
                     }
 
@@ -121,16 +119,13 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                 if (!Strings.isEmptyOrWhitespace(nombre.getText().toString()) && !Strings.isEmptyOrWhitespace(direccion.getText().toString()) && !Strings.isEmptyOrWhitespace(telefono.getText().toString())) {
 
                     final String nombreee = nombre.getText().toString().trim();
-                   // final String emailll = email.getText().toString().trim();
                     final String direccionnn = direccion.getText().toString().trim();
                     final String telefonooo = telefono.getText().toString().trim();
-                   // final String passworddd = password.getText().toString().trim();
 
                     Usuario user = new Usuario(nombreee, firebaseAuth.getCurrentUser().getEmail(),direccionnn,telefonooo);
 
                     editarUsuario(user);
 
-                    //Log.e("SALIDA", "LLEGA!!");
 
 
                 } else {
@@ -147,13 +142,13 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                 passwordAnterior = mView.findViewById(R.id.antiguoPassword);
                 nuevoPassword = mView.findViewById(R.id.nuevoPassword);
                 confirmarPassword = mView.findViewById(R.id.confirmarPassword);
-                btnCambiarContraseña = mView.findViewById(R.id.cambiarPassword_btn);
+                btn_CambiarContraseña = mView.findViewById(R.id.cambiarPassword_btn);
 
                 mBuilder.setView(mView);
                 alertDialog = mBuilder.create();
                 alertDialog.show();
 
-                btnCambiarContraseña.setOnClickListener(new View.OnClickListener() {
+                btn_CambiarContraseña.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(!Strings.isEmptyOrWhitespace(passwordAnterior.getText().toString()) && !Strings.isEmptyOrWhitespace(nuevoPassword.getText().toString()) && !Strings.isEmptyOrWhitespace(confirmarPassword.getText().toString())){
@@ -212,7 +207,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
 
                     Toast.makeText(getApplicationContext(), "La contraseña antigua que ha introducido es errónea", Toast.LENGTH_LONG).show();
                     dialog.dismiss();
-                    alertDialog.dismiss();
+
                 }
             }
         });
@@ -223,7 +218,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
 
     private void editarUsuario(final Usuario user){
 
-            // Para editar el usuario y modificar sus datos
+            // Para editar el nombreUsuario y modificar sus datos
 
             dialog = ProgressDialog.show(this, "",
                     "Cargando... espere por favor", true);

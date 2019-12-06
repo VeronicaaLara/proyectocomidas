@@ -16,10 +16,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.proyectocomidas.adapters.CategoriaAdapter;
+import com.example.proyectocomidas.adapters.ComentariosAdapter;
 import com.example.proyectocomidas.models.Categoria;
+import com.example.proyectocomidas.models.Comentario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CategoriaAdapter categoriaAdapter;
     private FirebaseFirestore mFirestore;
     private FirebaseAuth mAuth;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initUI(){
-
         /*
         SharedPreferences preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
