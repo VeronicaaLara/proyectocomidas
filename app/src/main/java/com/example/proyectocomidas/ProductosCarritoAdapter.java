@@ -50,16 +50,20 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
     private FirebaseAuth mAtuh;
     private SharedPreferences preferences;
     private ProductosCompra productsShop;
+    private Double precioTotal;
+    private TextView txtPrecioTotal;
 
     final long ONE_MEGABYTE = 1024 * 1024;
 
-    public ProductosCarritoAdapter(Context context, List<Producto> products, FirebaseStorage mStorage, FirebaseAuth mAuth){
+    public ProductosCarritoAdapter(Context context, List<Producto> products, FirebaseStorage mStorage, FirebaseAuth mAuth, Double precioTotal, TextView txtPrecioTotal){
         this.context = context;
         this.products = products;
         this.mStorage = mStorage;
         this.mAtuh = mAuth;
         preferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         productsShop = new ProductosCompra();
+        this.precioTotal = precioTotal;
+        this.txtPrecioTotal = txtPrecioTotal;
     }
 
     @NonNull
@@ -88,17 +92,18 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
         viewHolderCestaCarrito.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                precioTotal -= products.get(i).getPrecio();
                 products.remove(i);
                 notifyDataSetChanged();
+                txtPrecioTotal.setText(precioTotal + "€");
 
-                if(products.size() >= 0){
+                if (products.size() >= 0) {
                     productsShop.añadirProductos(products);
                     String json = productsShop.toJson();
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("productos", json);
                     editor.commit();
                 }
-
             }
         });
     }

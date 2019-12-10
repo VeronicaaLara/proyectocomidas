@@ -14,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,6 +36,8 @@ public class CestaCompraActivity extends AppCompatActivity {
     SharedPreferences preferences;
     Gson gson;
     Button pagarBtn;
+    Double precioTotal;
+    TextView txtPrecioTotal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +57,16 @@ public class CestaCompraActivity extends AppCompatActivity {
             productos = new ProductosCompra(productos.fromJSON(json).getListaProductos());
         }
 
-        mAdapter = new ProductosCarritoAdapter(this, productos.getListaProductos(), mStorage, mAuth);
+        txtPrecioTotal = findViewById(R.id.precioTotal);
+        precioTotal = 0.0;
+
+        for (Producto producto: productos.getListaProductos()) {
+            precioTotal += producto.getPrecio();
+        }
+
+        txtPrecioTotal.setText(precioTotal+"€");
+
+        mAdapter = new ProductosCarritoAdapter(this, productos.getListaProductos(), mStorage, mAuth, precioTotal, txtPrecioTotal);
         rvCestaCarrito.setAdapter(mAdapter);
 
     }
@@ -70,8 +83,12 @@ public class CestaCompraActivity extends AppCompatActivity {
         pagarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CestaCompraActivity.this, DatosCompraActivity.class);
-                startActivity(intent);
+                if(productos.getListaProductos().size() <= 0){
+                    Toast.makeText(CestaCompraActivity.this,"La cesta de la compra no puede estar vacía.",Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(CestaCompraActivity.this, DatosCompraActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
