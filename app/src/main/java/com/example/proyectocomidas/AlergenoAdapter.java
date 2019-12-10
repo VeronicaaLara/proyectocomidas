@@ -26,10 +26,10 @@ public class AlergenoAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View item = inflater.inflate(R.layout.alergeno_layout, null);
-        ImageView imagen = (ImageView) item.findViewById(R.id.alergeno_icono);
+        //ImageView imagen = (ImageView) item.findViewById(R.id.alergeno_icono);
         //imagen.setImageResource(datos.get(position).getDrawableImageID());
 
-        TextView nombre = (TextView) item.findViewById(R.id.ingrediente);
+        TextView nombre = (TextView) item.findViewById(R.id.alergeno);
         nombre.setText(datos.get(position).getNombre());
 
         return item;

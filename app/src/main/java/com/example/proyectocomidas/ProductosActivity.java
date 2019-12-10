@@ -360,9 +360,9 @@ public class ProductosActivity extends AppCompatActivity {
                         String id = document.getId();
                         String name = document.getString("nombre");
                         Log.e("prueba", name);
-                        alergenos.add(new Ingrediente(name, id));
+                        alergenos.add(new Alergeno(name, id));
                     }
-                    lvAlergenos.setAdapter(ingredienteAdapter);
+                    lvAlergenos.setAdapter(alergenoAdapter);
                 }
             }
         });

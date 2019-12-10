@@ -5,7 +5,7 @@ public class Alergeno {
     private String name;
     private String id;
 
-    public Alergeno(String id, String name) {
+    public Alergeno(String name, String id) {
         this.id = id;
         this.name = name;
     }
