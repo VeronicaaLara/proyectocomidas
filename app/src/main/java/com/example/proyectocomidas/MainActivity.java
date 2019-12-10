@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.proyectocomidas.adapters.CategoriaAdapter;
@@ -54,13 +55,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initMenu(){
+        mFirestore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        View hView = navigationView.getHeaderView(0);
+        final TextView nameUser = hView.findViewById(R.id.tvNameUser);
+        TextView emailUser = hView.findViewById(R.id.tvEmailUser);
+
         if(mAuth.getCurrentUser() != null){
+            mFirestore.collection("Usuarios").whereEqualTo("email", mAuth.getCurrentUser().getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()){
+                        if (task.getResult().getDocuments().size() != 0){
+                            nameUser.setText(task.getResult().getDocuments().get(0).getString("nombre"));
+                        }else{
+                            nameUser.setText(mAuth.getCurrentUser().getDisplayName());
+                        }
+                    }
+                }
+            });
+
+            emailUser.setText(mAuth.getCurrentUser().getEmail());
             navigationView.inflateMenu(R.menu.menu_usuario);
         }else{
             navigationView.inflateMenu(R.menu.menu_anonimo);
@@ -119,8 +140,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         editor.commit();
         */
 
-
-        mFirestore = FirebaseFirestore.getInstance();
         rvCategorias = findViewById(R.id.rvCategorias);
         rvCategorias.setHasFixedSize(true);
         rvCategorias.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
