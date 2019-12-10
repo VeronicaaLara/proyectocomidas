@@ -63,25 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
-        View hView = navigationView.getHeaderView(0);
-        final TextView nameUser = hView.findViewById(R.id.tvNameUser);
-        TextView emailUser = hView.findViewById(R.id.tvEmailUser);
-
         if(mAuth.getCurrentUser() != null){
-            mFirestore.collection("Usuarios").whereEqualTo("email", mAuth.getCurrentUser().getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()){
-                        if (task.getResult().getDocuments().size() != 0){
-                            nameUser.setText(task.getResult().getDocuments().get(0).getString("nombre"));
-                        }else{
-                            nameUser.setText(mAuth.getCurrentUser().getDisplayName());
-                        }
-                    }
-                }
-            });
-
-            emailUser.setText(mAuth.getCurrentUser().getEmail());
             navigationView.inflateMenu(R.menu.menu_usuario);
         }else{
             navigationView.inflateMenu(R.menu.menu_anonimo);
