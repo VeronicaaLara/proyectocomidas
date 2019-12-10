@@ -81,83 +81,82 @@ public class PedidosFavoritosActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
                     idUser = task.getResult().getDocuments().get(0).getId();
-                    Log.e("ID", idUser);
-                }
-            }
-        });
 
-        mFirestore.collection("Pedidos").whereEqualTo("idUser", idUser).whereEqualTo("favorito", true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot document: task.getResult()){
-                        String id = document.getId();
-                        String name = document.getString("nombrePedido");
-                        String comments = document.getString("comentarios");
-                        orders.add(new PedidoFavorito(id, name, comments));
-                    }
-
-                    ordersAdapter = new PedidosFavortitosAdapter(PedidosFavoritosActivity.this, orders, new CustomClickPedido() {
+                    mFirestore.collection("Pedidos").whereEqualTo("idUser", idUser).whereEqualTo("favorito", true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
-                        public void onClick(View view, int index) {
-                            idProducts.clear();
-                            productsOrder.clear();
-                            String id = orders.get(index).getId();
-                            final String comments = orders.get(index).getComments();
-                            mFirestore.collection("PedidoProductos").whereEqualTo("idPedido", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()){
-                                        for (QueryDocumentSnapshot document: task.getResult()){
-                                            final String idProducto = document.getString("idProducto");
-                                            idProducts.add(idProducto);
-                                        }
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                for (QueryDocumentSnapshot document: task.getResult()){
+                                    String id = document.getId();
+                                    String name = document.getString("nombrePedido");
+                                    String comments = document.getString("comentarios");
+                                    orders.add(new PedidoFavorito(id, name, comments));
+                                }
 
-                                        for (String idProduct: idProducts) {
-                                            for (Producto product : products) {
-                                                if (idProduct.equals(product.getId())) {
-                                                    productsOrder.add(product);
+                                ordersAdapter = new PedidosFavortitosAdapter(PedidosFavoritosActivity.this, orders, new CustomClickPedido() {
+                                    @Override
+                                    public void onClick(View view, int index) {
+                                        idProducts.clear();
+                                        productsOrder.clear();
+                                        String id = orders.get(index).getId();
+                                        final String comments = orders.get(index).getComments();
+                                        mFirestore.collection("PedidoProductos").whereEqualTo("idPedido", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()){
+                                                    for (QueryDocumentSnapshot document: task.getResult()){
+                                                        final String idProducto = document.getString("idProducto");
+                                                        idProducts.add(idProducto);
+                                                    }
+
+                                                    for (String idProduct: idProducts) {
+                                                        for (Producto product : products) {
+                                                            if (idProduct.equals(product.getId())) {
+                                                                productsOrder.add(product);
+                                                            }
+                                                        }
+                                                    }
+
+                                                    final AlertDialog.Builder mBuilder = new AlertDialog.Builder(PedidosFavoritosActivity.this);
+                                                    final View mView = getLayoutInflater().inflate(R.layout.dialog_detalle_pedidos, null);
+                                                    RecyclerView rvDetalle = mView.findViewById(R.id.rvDetallePedido);
+                                                    rvDetalle.setHasFixedSize(true);
+                                                    rvDetalle.setLayoutManager(new LinearLayoutManager(PedidosFavoritosActivity.this));
+                                                    DetallePedidoAdapter mAdapter = new DetallePedidoAdapter(PedidosFavoritosActivity.this, productsOrder);
+                                                    rvDetalle.setAdapter(mAdapter);
+
+                                                    Button addProductsButton = mView.findViewById(R.id.btnAddProducts);
+                                                    addProductsButton.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            SharedPreferences.Editor editor = preferences.edit();
+                                                            editor.clear();
+                                                            ProductosCompra pc = new ProductosCompra(productsOrder);
+                                                            String json = pc.toJson();
+                                                            editor.putString("productos", json);
+                                                            editor.putString("observaciones", comments);
+                                                            editor.commit();
+
+                                                            Snackbar snackbar = Snackbar.make(mView, "¡Productos añadidos con éxito!", Snackbar.LENGTH_LONG);
+                                                            snackbar.show();
+                                                            //Intent intent = new Intent(PedidosFavoritosActivity.this, CestaCompraActivity.class);
+                                                            //startActivity(intent);
+                                                        }
+                                                    });
+
+                                                    mBuilder.setView(mView);
+                                                    AlertDialog alertDialog = mBuilder.create();
+                                                    alertDialog.show();
                                                 }
                                             }
-                                        }
-
-                                        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(PedidosFavoritosActivity.this);
-                                        final View mView = getLayoutInflater().inflate(R.layout.dialog_detalle_pedidos, null);
-                                        RecyclerView rvDetalle = mView.findViewById(R.id.rvDetallePedido);
-                                        rvDetalle.setHasFixedSize(true);
-                                        rvDetalle.setLayoutManager(new LinearLayoutManager(PedidosFavoritosActivity.this));
-                                        DetallePedidoAdapter mAdapter = new DetallePedidoAdapter(PedidosFavoritosActivity.this, productsOrder);
-                                        rvDetalle.setAdapter(mAdapter);
-
-                                        Button addProductsButton = mView.findViewById(R.id.btnAddProducts);
-                                        addProductsButton.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                SharedPreferences.Editor editor = preferences.edit();
-                                                editor.clear();
-                                                ProductosCompra pc = new ProductosCompra(productsOrder);
-                                                String json = pc.toJson();
-                                                editor.putString("productos", json);
-                                                editor.putString("observaciones", comments);
-                                                editor.commit();
-
-                                                Snackbar snackbar = Snackbar.make(mView, "¡Productos añadidos con éxito!", Snackbar.LENGTH_LONG);
-                                                snackbar.show();
-                                                //Intent intent = new Intent(PedidosFavoritosActivity.this, CestaCompraActivity.class);
-                                                //startActivity(intent);
-                                            }
                                         });
-
-                                        mBuilder.setView(mView);
-                                        AlertDialog alertDialog = mBuilder.create();
-                                        alertDialog.show();
                                     }
-                                }
-                            });
+                                });
+
+                                rvOrdersFav.setAdapter(ordersAdapter);
+                            }
                         }
                     });
-
-                    rvOrdersFav.setAdapter(ordersAdapter);
                 }
             }
         });
