@@ -32,14 +32,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button btnCerrar, btnGuardar, btnContraseña;
+    Button btnGuardar, btnContraseña;
     EditText nombre, email, direccion, telefono;
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth firebaseAuth;
     ProgressDialog dialog;
     View mView;
     EditText passwordAnterior, nuevoPassword, confirmarPassword;
-    Button btnCambiarContraseña;
+    Button btn_CambiarContraseña;
     AlertDialog alertDialog;
 
 
@@ -56,9 +56,6 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
 
     private void init(){
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         this.firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -68,17 +65,13 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
         direccion = findViewById(R.id.direccionUsuario);
         telefono = findViewById(R.id.telefonoUsuario);
 
-        btnCerrar = findViewById(R.id.btnCerrarSesion);
         btnGuardar = findViewById(R.id.btnGuardarCambios);
         btnContraseña = findViewById(R.id.btnCambiarContraseña);
 
-        btnCerrar.setOnClickListener(this);
         btnGuardar.setOnClickListener(this);
         btnContraseña.setOnClickListener(this);
 
-
         obtenerDatosUsuario();
-
 
     }
 
@@ -105,7 +98,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                         PerfilUsuarioActivity.this.direccion.setText(direccion);
                         PerfilUsuarioActivity.this.telefono.setText(telefono);
 
-                        Log.e("EMAIL usuario logueado", email);
+                        Log.e("EMAIL nombreUsuario logueado", email);
 
                     }
 
@@ -115,29 +108,6 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
         });
 
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.btn_atras, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        // Al pulsar la fecha hacia atras que esta en el menu de arriba
-
-        if(id == R.id.back){
-
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-
-        }
-
-        return true;
-    }
-
 
 
     @Override
@@ -149,16 +119,13 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                 if (!Strings.isEmptyOrWhitespace(nombre.getText().toString()) && !Strings.isEmptyOrWhitespace(direccion.getText().toString()) && !Strings.isEmptyOrWhitespace(telefono.getText().toString())) {
 
                     final String nombreee = nombre.getText().toString().trim();
-                   // final String emailll = email.getText().toString().trim();
                     final String direccionnn = direccion.getText().toString().trim();
                     final String telefonooo = telefono.getText().toString().trim();
-                   // final String passworddd = password.getText().toString().trim();
 
                     Usuario user = new Usuario(nombreee, firebaseAuth.getCurrentUser().getEmail(),direccionnn,telefonooo);
 
                     editarUsuario(user);
 
-                    //Log.e("SALIDA", "LLEGA!!");
 
 
                 } else {
@@ -175,13 +142,13 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                 passwordAnterior = mView.findViewById(R.id.antiguoPassword);
                 nuevoPassword = mView.findViewById(R.id.nuevoPassword);
                 confirmarPassword = mView.findViewById(R.id.confirmarPassword);
-                btnCambiarContraseña = mView.findViewById(R.id.cambiarPassword_btn);
+                btn_CambiarContraseña = mView.findViewById(R.id.cambiarPassword_btn);
 
                 mBuilder.setView(mView);
                 alertDialog = mBuilder.create();
                 alertDialog.show();
 
-                btnCambiarContraseña.setOnClickListener(new View.OnClickListener() {
+                btn_CambiarContraseña.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(!Strings.isEmptyOrWhitespace(passwordAnterior.getText().toString()) && !Strings.isEmptyOrWhitespace(nuevoPassword.getText().toString()) && !Strings.isEmptyOrWhitespace(confirmarPassword.getText().toString())){
@@ -200,15 +167,6 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                         }
                     }
                 });
-
-                break;
-
-            case R.id.btnCerrarSesion:
-
-                firebaseAuth.signOut();
-
-                Intent intent = new Intent(PerfilUsuarioActivity.this, LoginActivity.class);
-                startActivity(intent);
 
                 break;
 
@@ -249,7 +207,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
 
                     Toast.makeText(getApplicationContext(), "La contraseña antigua que ha introducido es errónea", Toast.LENGTH_LONG).show();
                     dialog.dismiss();
-                    alertDialog.dismiss();
+
                 }
             }
         });
@@ -260,7 +218,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
 
     private void editarUsuario(final Usuario user){
 
-            // Para editar el usuario y modificar sus datos
+            // Para editar el nombreUsuario y modificar sus datos
 
             dialog = ProgressDialog.show(this, "",
                     "Cargando... espere por favor", true);
@@ -291,11 +249,6 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                 }
             });
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        // your code.
     }
 
 

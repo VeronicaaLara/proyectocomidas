@@ -173,20 +173,20 @@ public class LoginGoogleActivity extends AppCompatActivity implements
         super.onStart();
         changeUI(firebaseAuth.getCurrentUser());
 
-        //Obtener información del usuario logueado con google
+        //Obtener información del nombreUsuario logueado con google
 
         if(firebaseAuth.getCurrentUser() != null){
             Log.i("Account", firebaseAuth.getCurrentUser().getEmail());
         }
 
-        //Una forma de obtener información del usuario logueado en facebook
+        //Una forma de obtener información del nombreUsuario logueado en facebook
 
         if(Profile.getCurrentProfile() != null){
             Log.i("Account", Profile.getCurrentProfile().getName());
 
         }
 
-        //Otra forma de obtener información del usuario logueado en facebook
+        //Otra forma de obtener información del nombreUsuario logueado en facebook
 
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         if (accessToken != null) {

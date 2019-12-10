@@ -96,6 +96,7 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
                     String json = productsShop.toJson();
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("productos", json);
+                    editor.putString("observaciones", "");
                     editor.commit();
                 }
 
