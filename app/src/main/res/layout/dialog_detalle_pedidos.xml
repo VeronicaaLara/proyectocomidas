@@ -16,6 +16,12 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvDetallePedido"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="300dp" />
+
+    <Button
+        android:id="@+id/btnAddProducts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Añadir al carrito"/>
 
 </LinearLayout>

@@ -7,21 +7,17 @@
     tools:context=".CestaCompraActivity"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cesta de la compra"
-        android:textSize="20dp"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvCestaCompra"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:textColor="@android:color/black">
-
-    </TextView>
+        android:layout_width="match_parent"
+        android:layout_height="550dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
 
         <Button
             android:id="@+id/pagarBtn"
@@ -33,7 +29,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <TextView
                 android:layout_width="match_parent"
@@ -56,11 +53,5 @@
 
         </LinearLayout>
     </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvCestaCompra"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
 </LinearLayout>

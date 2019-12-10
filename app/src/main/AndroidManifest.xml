@@ -11,13 +11,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".CestaCompraActivity" />
-        <activity android:name=".PedidosFavoritosActivity"></activity>
-        <activity android:name=".LoginActivity"/>
+        <activity android:name=".RegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".CestaCompraActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".PedidosFavoritosActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name=".DatosCompraActivity"></activity>
-        <activity android:name=".MainActivity" >
+        <activity android:name=".DatosCompraActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,11 +31,13 @@
             </intent-filter>
             
         </activity>
-        <activity android:name=".ComentariosActivity"></activity>
+        <activity android:name=".ComentariosActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ProductosActivity"
-            android:theme="@style/NoActionBar" />
-        <activity android:name=".PerfilUsuarioActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".PerfilUsuarioActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
