@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -24,7 +25,8 @@ public class PedidosFavoritosActivity extends AppCompatActivity {
     private RecyclerView rvOrdersFav;
     private PedidosFavortitosAdapter ordersAdapter;
     private FirebaseFirestore mFirestore;
-    private String idUser = "kpKaRsBEO6Ma9MIi50H0";
+    private FirebaseAuth mAuth;
+    private String idUser;
     private List<Producto> products;
     private List<String> idProducts;
     private List<Producto> productsOrder;
@@ -39,6 +41,7 @@ public class PedidosFavoritosActivity extends AppCompatActivity {
 
     private void initUI(){
         mFirestore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         rvOrdersFav = findViewById(R.id.rvPedidosFav);
         rvOrdersFav.setHasFixedSize(true);
         rvOrdersFav.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -61,6 +64,16 @@ public class PedidosFavoritosActivity extends AppCompatActivity {
                         Double precio = document.getDouble("precio");
                         products.add(new Producto(id, name, description, image, available, idCatgeory, precio));
                     }
+                }
+            }
+        });
+
+        mFirestore.collection("Usuarios").whereEqualTo("email", mAuth.getCurrentUser().getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    idUser = task.getResult().getDocuments().get(0).getId();
+                    Log.e("ID", idUser);
                 }
             }
         });
