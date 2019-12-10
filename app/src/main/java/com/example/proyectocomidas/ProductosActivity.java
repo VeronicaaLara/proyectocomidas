@@ -371,11 +371,12 @@ public class ProductosActivity extends AppCompatActivity {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(ProductosActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.producto_dialog, null);
         TextView tvName = mView.findViewById(R.id.nombre_producto);
+        TextView tvDescripcion = mView.findViewById(R.id.descripcion_producto);
         final ImageView ivImage = mView.findViewById(R.id.img_producto);
         lvIngredientes = mView.findViewById(R.id.ingrediente_producto);
         lvAlergenos = mView.findViewById(R.id.alergeno_producto);
 
-        tvName.setText(products.get(index).getNombre());
+
         String image = products.get(index).getImagen();
         mStorage.getReference().child(image).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -384,6 +385,8 @@ public class ProductosActivity extends AppCompatActivity {
                 ivImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, 525, 525, false));
             }
         });
+        tvName.setText(products.get(index).getNombre());
+        tvDescripcion.setText(products.get(index).getDescripcion());
         rellenaIngredientes();
         rellenaAlergenos();
         mBuilder.setView(mView);
