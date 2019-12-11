@@ -103,7 +103,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(MainActivity.this, CestaCompraActivity.class));
         } else if (id == R.id.itemCerrarSesion) {
             mAuth.signOut();
-            recreate();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
