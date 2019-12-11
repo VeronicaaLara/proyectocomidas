@@ -58,6 +58,7 @@ public class ProductosActivity extends AppCompatActivity {
     private IngredienteAdapter ingredienteAdapter;
     private ListView lvIngredientes;
     private ListView lvAlergenos;
+    private ArrayList<Producto> productFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,7 @@ public class ProductosActivity extends AppCompatActivity {
     }
 
     private void initUI(){
+        productFilter = new ArrayList();
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
         mStorage = FirebaseStorage.getInstance();
@@ -85,8 +87,6 @@ public class ProductosActivity extends AppCompatActivity {
         preferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
         ingredientes = new ArrayList<>();
         alergenos = new ArrayList<>();
-        alergenoAdapter = new AlergenoAdapter(this, alergenos);
-        ingredienteAdapter = new IngredienteAdapter(this, ingredientes);
         if(nameCategory.equals("Todo")){
 
             mFirestore.collection("Productos").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -107,9 +107,11 @@ public class ProductosActivity extends AppCompatActivity {
                         productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth, mProductsShop, new CustomClickPedido() {
                             @Override
                             public void onClick(View view, int index) {
-                                montarModal(index);
+                                getIngredientsAndAllergens(index);
+
                             }
                         });
+
                         rvProducts.setAdapter(productAdapter);
 
                         String json = preferences.getString("productos", "");
@@ -140,7 +142,7 @@ public class ProductosActivity extends AppCompatActivity {
                         productAdapter = new ProductoAdapter(ProductosActivity.this, products, mStorage, mAuth, mProductsShop, new CustomClickPedido() {
                             @Override
                             public void onClick(View view, int index) {
-                                montarModal(index);
+                                getIngredientsAndAllergens(index);
                             }
                         });
                         rvProducts.setAdapter(productAdapter);
@@ -222,6 +224,99 @@ public class ProductosActivity extends AppCompatActivity {
         });
     }
 
+    private void getIngredientsAndAllergens(final int index){
+        final List<Alergeno> allergens = new ArrayList<>();
+        final List<AlergenosIngredientes> alergenosIngredientes = new ArrayList<>();
+        final List<IngredientesProducto> ingredientesProductos = new ArrayList<>();
+        final List<Ingrediente> ingredientes = new ArrayList<>();
+        mFirestore.collection("Alergenos").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (QueryDocumentSnapshot document: task.getResult()){
+                        String id = document.getId();
+                        String allergen = document.getString("nombre");
+                        allergens.add(new Alergeno(id, allergen));
+                    }
+
+                    mFirestore.collection("AlergenosIngredientes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                for (QueryDocumentSnapshot document: task.getResult()){
+                                    String alergenosID = document.getString("idAlergeno");
+                                    String ingredientesID = document.getString("idIngrediente");
+                                    alergenosIngredientes.add(new AlergenosIngredientes(alergenosID, ingredientesID));
+                                }
+
+                                String idProducto = "";
+
+                                if(productFilter.size() > 0){
+                                    idProducto = productFilter.get(index).getId();
+                                }else{
+                                    idProducto = products.get(index).getId();
+                                }
+
+                                mFirestore.collection("IngredientesProductos").whereEqualTo("idProducto", idProducto).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()){
+                                            for (QueryDocumentSnapshot document: task.getResult()){
+                                                String ingredientesID = document.getString("idIngrediente");
+                                                String productoID = document.getString("idProducto");
+                                                ingredientesProductos.add(new IngredientesProducto(ingredientesID, productoID));
+                                            }
+
+
+
+                                            mFirestore.collection("Ingredientes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if (task.isSuccessful()){
+                                                        for (QueryDocumentSnapshot document: task.getResult()){
+                                                            String ingredientesId = document.getId();
+                                                            String ingredienteNombre = document.getString("nombre");
+                                                            ingredientes.add(new Ingrediente(ingredientesId, ingredienteNombre));
+                                                        }
+
+                                                        ArrayList<Ingrediente> productoIngredientes = new ArrayList<>();
+                                                        ArrayList<Alergeno> productoAlergenos = new ArrayList<>();
+
+
+                                                        for(int i = 0; i < ingredientes.size(); i++){
+                                                            for(int j = 0; j < ingredientesProductos.size(); j++){
+                                                                if(ingredientes.get(i).getId().equals(ingredientesProductos.get(j).getIdIngrediente())){
+                                                                    productoIngredientes.add(ingredientes.get(i));
+                                                                    String idIngrediente = ingredientes.get(i).getId();
+                                                                    for (int k = 0; k < alergenosIngredientes.size(); k++) {
+                                                                        if (alergenosIngredientes.get(k).getIdIngrediente().equals(idIngrediente)) {
+                                                                            String idAlergeno = alergenosIngredientes.get(k).getIdAlergeno();
+                                                                            for (int l = 0; l < allergens.size(); l++) {
+                                                                                if (allergens.get(l).getId().equals(idAlergeno)) {
+                                                                                    productoAlergenos.add(allergens.get(l));
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                        montarModal(index, productoIngredientes, productoAlergenos);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -252,7 +347,7 @@ public class ProductosActivity extends AppCompatActivity {
         }).setPositiveButton("FILTRAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                final ArrayList productFilter = new ArrayList();
+                productFilter = new ArrayList();
                 final List<Producto> result = new ArrayList<>();
 
                 ArrayList<String> allergensProduct;
@@ -334,40 +429,8 @@ public class ProductosActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void rellenaIngredientes(){
-        mFirestore.collection("Ingredientes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        String id = document.getId();
-                        String name = document.getString("nombre");
-                        ingredientes.add(new Ingrediente(name, id));
-                        Log.e("prueba", name);
-                    }
-                    lvIngredientes.setAdapter(ingredienteAdapter);
-                }
-            }
-        });
-    }
 
-    public void rellenaAlergenos(){
-        mFirestore.collection("Alergenos").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        String id = document.getId();
-                        String name = document.getString("nombre");
-                        Log.e("prueba", name);
-                        alergenos.add(new Alergeno(name, id));
-                    }
-                    lvAlergenos.setAdapter(alergenoAdapter);
-                }
-            }
-        });
-    }
-    public void montarModal(int index){
+    public void montarModal(int index, ArrayList<Ingrediente> ingredientes, ArrayList<Alergeno> alergenos){
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(ProductosActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.producto_dialog, null);
         TextView tvName = mView.findViewById(R.id.nombre_producto);
@@ -376,8 +439,20 @@ public class ProductosActivity extends AppCompatActivity {
         lvIngredientes = mView.findViewById(R.id.ingrediente_producto);
         lvAlergenos = mView.findViewById(R.id.alergeno_producto);
 
+        String image = "";
+        String name = "";
+        String description = "";
 
-        String image = products.get(index).getImagen();
+        if(productFilter.size() > 0){
+            image = productFilter.get(index).getImagen();
+            name = productFilter.get(index).getNombre();
+            description = productFilter.get(index).getDescripcion();
+        }else{
+            image = products.get(index).getImagen();
+            name = products.get(index).getNombre();
+            description = products.get(index).getDescripcion();
+        }
+
         mStorage.getReference().child(image).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
@@ -385,12 +460,16 @@ public class ProductosActivity extends AppCompatActivity {
                 ivImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, 525, 525, false));
             }
         });
-        tvName.setText(products.get(index).getNombre());
-        tvDescripcion.setText(products.get(index).getDescripcion());
-        rellenaIngredientes();
-        rellenaAlergenos();
+        tvName.setText(name);
+        tvDescripcion.setText(description);
+
+        alergenoAdapter = new AlergenoAdapter(this, alergenos);
+        ingredienteAdapter = new IngredienteAdapter(this, ingredientes);
+        lvIngredientes.setAdapter(ingredienteAdapter);
+        lvAlergenos.setAdapter(alergenoAdapter);
+
         mBuilder.setView(mView);
-            AlertDialog alertDialog = mBuilder.create();
+        AlertDialog alertDialog = mBuilder.create();
         alertDialog.show();
 
         }

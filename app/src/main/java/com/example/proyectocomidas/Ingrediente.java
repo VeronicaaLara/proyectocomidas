@@ -5,7 +5,7 @@ public class Ingrediente{
     private String name;
     private String id;
 
-    public Ingrediente(String name, String id) {
+    public Ingrediente(String id, String name) {
         this.id = id;
         this.name = name;
     }
