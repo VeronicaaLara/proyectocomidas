@@ -149,7 +149,7 @@ public class DatosCompraActivity extends AppCompatActivity {
 
         SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         Calendar calendarioAhora = Calendar.getInstance();
-        calendarioAhora.add(Calendar.HOUR_OF_DAY, 1);
+       // calendarioAhora.add(Calendar.HOUR_OF_DAY, 1);
         // String hour = format.format(calendar.getTime());
 
         Calendar calendarioCierreMañana = Calendar.getInstance();
@@ -170,6 +170,8 @@ public class DatosCompraActivity extends AppCompatActivity {
         calendarioAperturaMañana.set(Calendar.MINUTE, minutosAperturaMañana);
 
 
+
+
         if(calendarioAhora.before(calendarioAperturaMañana) || calendarioAhora.after(calendarioCierreTarde)){
             calendarioAhora = calendarioAperturaMañana;
 
@@ -181,16 +183,32 @@ public class DatosCompraActivity extends AppCompatActivity {
         } else if(calendarioAhora.before(calendarioCierreMañana)){
             calendarioAhora.add(Calendar.MINUTE, 30);
 
+            Log.e("Error", calendarioAhora.getTime().toString());
+            Log.e("Error", calendarioCierreMañana.getTime().toString());
+
             if(calendarioAhora.after(calendarioCierreMañana))
                 calendarioAhora = calendarioAperturaTarde;
 
-            while(calendarioAhora.before(calendarioCierreMañana)){
+            Log.e("Error", calendarioAhora.getTime().toString());
 
-                if(calendarioAhora.after(calendarioCierreMañana))
-                    break;
+            if(calendarioAhora.after(calendarioCierreMañana)){
+                while(calendarioAhora.before(calendarioCierreTarde)){
 
-                horasRecogida.add(format.format(calendarioAhora.getTime()));
-                calendarioAhora.add(Calendar.MINUTE, 30);
+                    if(calendarioAhora.after(calendarioCierreTarde))
+                        break;
+
+                    horasRecogida.add(format.format(calendarioAhora.getTime()));
+                    calendarioAhora.add(Calendar.MINUTE, 30);
+                }
+            }else{
+                while(calendarioAhora.before(calendarioCierreMañana)){
+
+                    if(calendarioAhora.after(calendarioCierreMañana))
+                        break;
+
+                    horasRecogida.add(format.format(calendarioAhora.getTime()));
+                    calendarioAhora.add(Calendar.MINUTE, 30);
+                }
             }
 
         } else if(calendarioAhora.before(calendarioAperturaTarde)){
@@ -206,14 +224,27 @@ public class DatosCompraActivity extends AppCompatActivity {
             if(calendarioAhora.after(calendarioCierreTarde))
                 calendarioAhora = calendarioAperturaMañana;
 
-            while(calendarioAhora.before(calendarioCierreTarde)){
+            if(calendarioAhora.after(calendarioCierreTarde)){
+                while(calendarioAhora.before(calendarioCierreMañana)){
 
-                if(calendarioAhora.after(calendarioCierreTarde))
-                    break;
+                    if(calendarioAhora.after(calendarioCierreMañana))
+                        break;
 
-                horasRecogida.add(format.format(calendarioAhora.getTime()));
-                calendarioAhora.add(Calendar.MINUTE, 30);
+                    horasRecogida.add(format.format(calendarioAhora.getTime()));
+                    calendarioAhora.add(Calendar.MINUTE, 30);
+                }
+            }else{
+                while(calendarioAhora.before(calendarioCierreTarde)){
+
+                    if(calendarioAhora.after(calendarioCierreTarde))
+                        break;
+
+                    horasRecogida.add(format.format(calendarioAhora.getTime()));
+                    calendarioAhora.add(Calendar.MINUTE, 30);
+                }
             }
+
+
         }
 
         return horasRecogida;
