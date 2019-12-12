@@ -48,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()){
-                                    Usuario user = new Usuario(name, email, address, phone);
+                                    Usuario user = new Usuario(name, email, address, phone, false);
                                     addNewUser(user);
                                 }else{
                                     Toast.makeText(getApplicationContext(), "Error al realizar registro", Toast.LENGTH_SHORT).show();

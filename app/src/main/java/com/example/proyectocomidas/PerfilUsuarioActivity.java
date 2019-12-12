@@ -41,6 +41,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
     EditText passwordAnterior, nuevoPassword, confirmarPassword;
     Button btn_CambiarContraseña;
     AlertDialog alertDialog;
+    Boolean isGoogle;
 
 
     @Override
@@ -90,6 +91,13 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                         String email = document.getString("email");
                         String direccion = document.getString("direccion");
                         String telefono = document.getString("telefono");
+                        isGoogle = document.getBoolean("google");
+
+                        if(isGoogle){
+                            btnContraseña.setVisibility(View.GONE);
+                        }else{
+                            btnContraseña.setVisibility(View.VISIBLE);
+                        }
 
 
                         // PONGO LOS DATOS en los EditText
@@ -98,7 +106,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                         PerfilUsuarioActivity.this.direccion.setText(direccion);
                         PerfilUsuarioActivity.this.telefono.setText(telefono);
 
-                        Log.e("EMAIL nombreUsuario logueado", email);
+                        Log.e("EMAIL usuario logueado", email);
 
                     }
 
@@ -122,7 +130,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                     final String direccionnn = direccion.getText().toString().trim();
                     final String telefonooo = telefono.getText().toString().trim();
 
-                    Usuario user = new Usuario(nombreee, firebaseAuth.getCurrentUser().getEmail(),direccionnn,telefonooo);
+                    Usuario user = new Usuario(nombreee, firebaseAuth.getCurrentUser().getEmail(),direccionnn,telefonooo, isGoogle);
 
                     editarUsuario(user);
 

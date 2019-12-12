@@ -6,28 +6,32 @@ public class Usuario {
     private String email;
     private String direccion;
     private String telefono;
+    private Boolean isGoogle;
 
 
-    public Usuario(String nombre, String email, String direccion, String telefono) {
+    public Usuario(String nombre, String email, String direccion, String telefono, Boolean isGoogle) {
         this.nombre = nombre;
         this.email = email;
         this.direccion = direccion;
         this.telefono = telefono;
+        this.isGoogle = isGoogle;
 
     }
 
-    public Usuario(String nombre, String email) {
+    public Usuario(String nombre, String email, Boolean isGoogle) {
         this.nombre = nombre;
         this.email = email;
         this.direccion = "";
         this.telefono = "";
+        this.isGoogle = isGoogle;
     }
 
-    public Usuario(String email) {
+    public Usuario(String email, Boolean isGoogle) {
         this.nombre = "";
         this.email = email;
         this.direccion = "";
         this.telefono = "";
+        this.isGoogle = isGoogle;
     }
 
     public String getNombre() {
@@ -62,8 +66,13 @@ public class Usuario {
         this.telefono = telefono;
     }
 
+    public Boolean getGoogle() {
+        return isGoogle;
+    }
 
-
+    public void setGoogle(Boolean google) {
+        isGoogle = google;
+    }
 
     @Override
     public String toString() {
@@ -72,6 +81,7 @@ public class Usuario {
                 ", email='" + email + '\'' +
                 ", direccion='" + direccion + '\'' +
                 ", telefono='" + telefono + '\'' +
+                ", isGoogle=" + isGoogle +
                 '}';
     }
 }

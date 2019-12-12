@@ -146,9 +146,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                                     Usuario user = null;
                                     if(mAuth.getCurrentUser().getDisplayName().isEmpty()){
-                                        user = new Usuario(mAuth.getCurrentUser().getEmail());
+                                        user = new Usuario(mAuth.getCurrentUser().getEmail(), true);
                                     }else{
-                                        user = new Usuario(mAuth.getCurrentUser().getDisplayName(), mAuth.getCurrentUser().getEmail());
+                                        user = new Usuario(mAuth.getCurrentUser().getDisplayName(), mAuth.getCurrentUser().getEmail(), true);
                                     }
                                     firebaseFirestore.collection("Usuarios").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                         @Override
