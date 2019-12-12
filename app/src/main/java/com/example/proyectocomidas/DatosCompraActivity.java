@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -277,11 +278,17 @@ public class DatosCompraActivity extends AppCompatActivity {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(DatosCompraActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.dialog_pedido_favorito, null);
         final EditText tvOrderName = mView.findViewById(R.id.nombrePedidoFavorito);
+        TextView txtMensaje = mView.findViewById(R.id.pedidoFavorito);
         Button btnSave = mView.findViewById(R.id.guardarPedidoFavorito);
 
         if (idUser == null){
-            btnSave.setEnabled(false);
-            tvOrderName.setEnabled(false);
+            txtMensaje.setVisibility(View.GONE);
+            btnSave.setVisibility(View.GONE);
+            tvOrderName.setVisibility(View.GONE);
+        }else{
+            txtMensaje.setVisibility(View.VISIBLE);
+            btnSave.setVisibility(View.VISIBLE);
+            tvOrderName.setVisibility(View.VISIBLE);
         }
 
         btnSave.setOnClickListener(new View.OnClickListener() {
