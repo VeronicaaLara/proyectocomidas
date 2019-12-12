@@ -24,7 +24,7 @@
 
     <EditText
         android:id="@+id/nombrePedidoFavorito"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@id/pedidoFavorito"
