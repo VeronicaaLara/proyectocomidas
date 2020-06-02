@@ -2,20 +2,23 @@ package com.example.proyectocomidas.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.proyectocomidas.ProductosActivity;
 import com.example.proyectocomidas.R;
 import com.example.proyectocomidas.models.Categoria;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -43,12 +46,11 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.View
 
         viewHolderCategoria.tvName.setText(categorias.get(i).getName());
 
-        // Para enviar la imagen, con Glide podemos pasarle en el load la url donde esta la imagen y la convierte a una imagen que
-        //mediante el into la ponemos en el ImagenView ivImagen  que esta en el layout item_categoria
 
-        Glide.with(context.getApplicationContext())
-                .load(categorias.get(i).getUrlFoto())
+        Picasso.get()
+                .load(categorias.get(i).getMin())
                 .into(viewHolderCategoria.ivImagen);
+
 
         // Ahora le digo que cuando se pinche encima de una fila haga algo, provisionalmente un alert
 
@@ -59,6 +61,7 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.View
                     Intent intent = new Intent(context, ProductosActivity.class);
                     intent.putExtra("nombreCategoria", categorias.get(i).getName());
                     intent.putExtra("idCategoria", categorias.get(i).getId());
+
                     context.startActivity(intent);
                 }
             });

@@ -1,37 +1,41 @@
-package com.example.proyectocomidas;
+package com.example.proyectocomidas.models;
 
 
 public class Usuario {
     private String nombre;
+    private String apellido;
     private String email;
     private String direccion;
     private String telefono;
-    private Boolean isGoogle;
+    private String password;
 
 
-    public Usuario(String nombre, String email, String direccion, String telefono, Boolean isGoogle) {
+    public Usuario(String nombre, String email, String direccion, String telefono, String apellido, String password) {
         this.nombre = nombre;
         this.email = email;
         this.direccion = direccion;
         this.telefono = telefono;
-        this.isGoogle = isGoogle;
+        this.apellido = apellido;
+        this.password = password;
 
     }
 
-    public Usuario(String nombre, String email, Boolean isGoogle) {
+    public Usuario(String nombre, String apellido, String email, String password) {
         this.nombre = nombre;
+        this.apellido = apellido;
         this.email = email;
         this.direccion = "";
         this.telefono = "";
-        this.isGoogle = isGoogle;
+        this.password = password;
     }
 
-    public Usuario(String email, Boolean isGoogle) {
+    public Usuario(String email, String password) {
         this.nombre = "";
+        this.apellido = "";
         this.email = email;
         this.direccion = "";
         this.telefono = "";
-        this.isGoogle = isGoogle;
+        this.password = password;
     }
 
     public String getNombre() {
@@ -66,13 +70,20 @@ public class Usuario {
         this.telefono = telefono;
     }
 
-    public Boolean getGoogle() {
-        return isGoogle;
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
-    public void setGoogle(Boolean google) {
-        isGoogle = google;
+    public String getApellido() { return apellido; }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
 
     @Override
     public String toString() {
@@ -81,7 +92,8 @@ public class Usuario {
                 ", email='" + email + '\'' +
                 ", direccion='" + direccion + '\'' +
                 ", telefono='" + telefono + '\'' +
-                ", isGoogle=" + isGoogle +
+                ", apellido=" + apellido +
+                ", password=" + password +
                 '}';
     }
 }

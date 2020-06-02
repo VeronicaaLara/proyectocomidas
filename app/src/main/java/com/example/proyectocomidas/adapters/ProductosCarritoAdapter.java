@@ -1,28 +1,26 @@
-package com.example.proyectocomidas;
+package com.example.proyectocomidas.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.example.proyectocomidas.models.Producto;
+import com.example.proyectocomidas.models.ProductosCompra;
+import com.example.proyectocomidas.R;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.gson.Gson;
 
-import java.util.ArrayList;
+
+import com.google.firebase.storage.FirebaseStorage;
+
 import java.util.List;
 
 public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarritoAdapter.ViewHolderCestaCarrito> {
@@ -47,7 +45,6 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
     private Context context;
     private List<Producto> products;
     private FirebaseStorage mStorage;
-    private FirebaseAuth mAtuh;
     private SharedPreferences preferences;
     private ProductosCompra productsShop;
     private Double precioTotal;
@@ -55,11 +52,10 @@ public class ProductosCarritoAdapter extends RecyclerView.Adapter<ProductosCarri
 
     final long ONE_MEGABYTE = 1024 * 1024;
 
-    public ProductosCarritoAdapter(Context context, List<Producto> products, FirebaseStorage mStorage, FirebaseAuth mAuth, Double precioTotal, TextView txtPrecioTotal){
+    public ProductosCarritoAdapter(Context context, List<Producto> products, FirebaseStorage mStorage, Double precioTotal, TextView txtPrecioTotal){
         this.context = context;
         this.products = products;
         this.mStorage = mStorage;
-        this.mAtuh = mAuth;
         preferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         productsShop = new ProductosCompra();
         this.precioTotal = precioTotal;

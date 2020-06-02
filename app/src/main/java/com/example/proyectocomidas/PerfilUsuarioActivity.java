@@ -2,25 +2,24 @@ package com.example.proyectocomidas;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.proyectocomidas.models.Usuario;
 import com.google.android.gms.common.util.Strings;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+
+
+
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -123,7 +122,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
         switch (v.getId()){
             case R.id.btnGuardarCambios:
 
-
+                /*
                 if (!Strings.isEmptyOrWhitespace(nombre.getText().toString()) && !Strings.isEmptyOrWhitespace(direccion.getText().toString()) && !Strings.isEmptyOrWhitespace(telefono.getText().toString())) {
 
                     final String nombreee = nombre.getText().toString().trim();
@@ -141,7 +140,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity implements View.OnC
                     Toast.makeText(getApplicationContext(), "Debes de rellenar todos los campos", Toast.LENGTH_LONG).show();
                 }
 
-                break;
+                break;*/
 
             case R.id.btnCambiarContraseña:
 

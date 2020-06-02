@@ -3,28 +3,24 @@ package com.example.proyectocomidas;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.gson.Gson;
+import com.example.proyectocomidas.adapters.ProductosCarritoAdapter;
+import com.example.proyectocomidas.models.Producto;
+import com.example.proyectocomidas.models.ProductosCompra;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+
+import com.google.gson.Gson;
 
 public class CestaCompraActivity extends AppCompatActivity {
 
@@ -66,7 +62,7 @@ public class CestaCompraActivity extends AppCompatActivity {
 
         txtPrecioTotal.setText(precioTotal+"€");
 
-        mAdapter = new ProductosCarritoAdapter(this, productos.getListaProductos(), mStorage, mAuth, precioTotal, txtPrecioTotal);
+        mAdapter = new ProductosCarritoAdapter(this, productos.getListaProductos(), mStorage, precioTotal, txtPrecioTotal);
         rvCestaCarrito.setAdapter(mAdapter);
 
     }

@@ -1,44 +1,35 @@
 package com.example.proyectocomidas;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonArray;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class LoginActivity extends AppCompatActivity {
 
     private EditText txEmail, txPassword;
     private Button btnLogin, btnRegister;
-    private SignInButton btnGoogle;
-    private FirebaseAuth mAuth;
-    FirebaseFirestore firebaseFirestore;
-    private GoogleApiClient mGoogleApiClient;
-    private static final int CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +37,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
 
         initUI();
-        configureGoogle();
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,37 +46,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = txEmail.getText().toString().trim();
-                String password = txPassword.getText().toString().trim();
+        btnLogin.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View v) { attemptLogin(); }});
 
-                if (!email.isEmpty() && !password.isEmpty()){
-                    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
-                            }else{
-                                Toast.makeText(getApplicationContext(), "Inicio de sesión fallido", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }else{
-                    Toast.makeText(getApplicationContext(), "¡Campos obligatorios!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        btnGoogle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                startActivityForResult(intent,CODE);
-            }
-        });
     }
 
     private void initUI(){
@@ -94,93 +55,80 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         txPassword = findViewById(R.id.txPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
-        btnGoogle = findViewById(R.id.btnGoogle);
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
     }
 
-    private void configureGoogle(){
-        GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
+    private void attemptLogin() {
+        txPassword.setError(null);
+        txEmail.setError(null);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this,this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API,options)
-                .build();
-    }
+        boolean cancel = false;
+        View focusView = null;
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        String mail = txEmail.getText().toString();
+        String pass = txPassword.getText().toString();
 
-        if (requestCode == CODE){
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()){
-                GoogleSignInAccount account = result.getSignInAccount();
-                AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(),null);
-                firebaseAuthWithGoogle(credential,account);
-            }else{
-                Toast.makeText(getApplicationContext(), "Inicio de sesión fallido", Toast.LENGTH_SHORT).show();
-            }
+        if (TextUtils.isEmpty(pass)) {
+            txPassword.setError(getString(R.string.field_empty));
+            focusView = txPassword;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(mail)) {
+            txEmail.setError(getString(R.string.field_empty));
+            focusView = txEmail;
+            cancel = true;
+        }
+
+        if (cancel) {
+            focusView.requestFocus();
+        } else {
+            doLogin(mail, pass);
         }
     }
 
+    private void doLogin(String mail, String pass) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String URL = Constants.URL_LOGIN;
+        final Map<String, String> jsonBody = new HashMap<>();
+        jsonBody.put("email", mail);
+        jsonBody.put("password", pass);
 
-    private void firebaseAuthWithGoogle(AuthCredential credential, final GoogleSignInAccount account){
-        mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        CustomRequest request = new CustomRequest(Request.Method.POST, URL, jsonBody, new Response.Listener<JSONObject>() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
+            public void onResponse(JSONObject response) {
+                Log.i("VOLLEY", response.toString());
+                try {
+                    if(response.getInt("code") != 1){
+                        Toast.makeText(LoginActivity.this, response.getString("error"), Toast.LENGTH_LONG).show();
+                    }else{
+                        JSONObject jsonObject = response.getJSONObject("response");
+                        JSONObject jsonData = jsonObject.getJSONObject("data");
+                        JSONObject jsonUser = jsonData.getJSONObject("user");
 
-                    firebaseFirestore.collection("Usuarios").whereEqualTo("email", mAuth.getCurrentUser().getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                if (task.getResult().getDocuments().size() > 0) {
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
+                        SharedPreferences preferencias = getSharedPreferences(Constants.PREF, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferencias.edit();
 
-                                } else {
+                        editor.putBoolean(Constants.PREF_LOG,true);
+                        editor.putString(Constants.PREF_USER_TOKEN, response.getString("token"));
+                        // ESTO DA PROBLEMAS
+                        editor.putInt(Constants.PREF_USER_ID, jsonUser.getInt("id"));
+                        editor.apply();
 
-                                    Usuario user = null;
-                                    if(mAuth.getCurrentUser().getDisplayName().isEmpty()){
-                                        user = new Usuario(mAuth.getCurrentUser().getEmail(), true);
-                                    }else{
-                                        user = new Usuario(mAuth.getCurrentUser().getDisplayName(), mAuth.getCurrentUser().getEmail(), true);
-                                    }
-                                    firebaseFirestore.collection("Usuarios").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference documentReference) {
-                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                            startActivity(intent);
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    });
-
-                }else{
-                    Toast.makeText(getApplicationContext(),"Autentiación fallida",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("VOLLEY", error.toString());
+
+            }
         });
-    }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        requestQueue.add(request);
     }
 }

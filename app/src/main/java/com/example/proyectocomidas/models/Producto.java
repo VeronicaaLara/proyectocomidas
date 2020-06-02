@@ -1,4 +1,4 @@
-package com.example.proyectocomidas;
+package com.example.proyectocomidas.models;
 
 public class Producto {
     private String id;

@@ -1,18 +1,21 @@
-package com.example.proyectocomidas;
+package com.example.proyectocomidas.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.proyectocomidas.models.Producto;
+import com.example.proyectocomidas.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.List;

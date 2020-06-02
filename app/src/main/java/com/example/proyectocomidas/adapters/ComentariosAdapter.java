@@ -1,9 +1,8 @@
 package com.example.proyectocomidas.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.example.proyectocomidas.ProductosActivity;
 import com.example.proyectocomidas.R;
-import com.example.proyectocomidas.models.Categoria;
 import com.example.proyectocomidas.models.Comentario;
 
 import java.util.List;

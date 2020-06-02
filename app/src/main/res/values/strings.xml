@@ -12,5 +12,9 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="updated">%s updated.</string>
+    <string name="error_msg">"Error: "</string>
+    <string name="field_empty">Campo obligatorio</string>
+    <string name="errorRegister">Error al realizar el registro</string>
+    <string name="okRegister">Registro realizado con éxito</string>
 
 </resources>

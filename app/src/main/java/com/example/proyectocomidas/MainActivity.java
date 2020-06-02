@@ -1,38 +1,46 @@
 package com.example.proyectocomidas;
 
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import androidx.annotation.NonNull;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.material.navigation.NavigationView;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.example.proyectocomidas.adapters.CategoriaAdapter;
-import com.example.proyectocomidas.adapters.ComentariosAdapter;
 import com.example.proyectocomidas.models.Categoria;
-import com.example.proyectocomidas.models.Comentario;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,13 +48,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Categoria> categorias;
     private RecyclerView rvCategorias;
     private CategoriaAdapter categoriaAdapter;
-    private FirebaseFirestore mFirestore;
-    private FirebaseAuth mAuth;
+    private SharedPreferences preferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        preferences = getSharedPreferences(Constants.PREF, MODE_PRIVATE);
 
         initMenu();
         initUI();
@@ -55,15 +65,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initMenu(){
-        mFirestore = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //Guardar token en sharedPreference
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
-        if(mAuth.getCurrentUser() != null){
+        boolean isLogged = preferences.getBoolean(Constants.PREF_LOG, false);
+
+        if(isLogged){
             navigationView.inflateMenu(R.menu.menu_usuario);
         }else{
             navigationView.inflateMenu(R.menu.menu_anonimo);
@@ -73,6 +85,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void initUI(){
+        /*
+        SharedPreferences preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+        */
+
+        rvCategorias = findViewById(R.id.rvCategorias);
+        rvCategorias.setHasFixedSize(true);
+        rvCategorias.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        boolean flag = false; // valor por defecto si aun no se ha tomado el username
     }
 
 
@@ -102,7 +129,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.itemCarrito) {
             startActivity(new Intent(MainActivity.this, CestaCompraActivity.class));
         } else if (id == R.id.itemCerrarSesion) {
-            mAuth.signOut();
+            SharedPreferences preferences = getSharedPreferences(Constants.PREF, MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(Constants.PREF_LOG,false);
+            editor.apply();
             Intent intent = getIntent();
             finish();
             startActivity(intent);
@@ -113,46 +143,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void initUI(){
-        /*
-        SharedPreferences preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
-        */
-
-        rvCategorias = findViewById(R.id.rvCategorias);
-        rvCategorias.setHasFixedSize(true);
-        rvCategorias.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-        boolean flag = false; // valor por defecto si aun no se ha tomado el username
-    }
-
-    private void obtenerCategorias(){
+    private  void obtenerCategorias(){
+        String URL = Constants.URL_CATEGORIES;
 
         categorias = new ArrayList<>();
 
-        mFirestore.collection("Categorias").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot document: task.getResult()){
-                        String name = document.getString("nombre");
-                        String urlFoto = document.getData().get("imagen").toString();
-                        Log.e("error", document.getId());
-                        String idCategoria = document.getId();
-                        categorias.add(new Categoria(name, urlFoto, idCategoria));
-                    }
-
-                    categoriaAdapter = new CategoriaAdapter(MainActivity.this, categorias);
-                    rvCategorias.setAdapter(categoriaAdapter);
+            public void onResponse(JSONObject response) {
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<Categoria>>() {
+                }.getType();
+                try {
+                    JSONObject jsonObject = response.getJSONObject("response");
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    categorias = gson.fromJson(jsonArray.toString(), type);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
+                categoriaAdapter = new CategoriaAdapter(MainActivity.this, categorias);
+                rvCategorias.setAdapter(categoriaAdapter);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Ad Response", error.getMessage());
+                showErrorMsg(error.getMessage());
             }
         });
 
+        RequestQueue requestQueue = Volley.newRequestQueue(this);;
+
+        requestQueue.add(request);
     }
 
+    private void showErrorMsg(String error) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.app_name);
+        builder.setMessage(getString(R.string.error_msg) + error);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 
 }

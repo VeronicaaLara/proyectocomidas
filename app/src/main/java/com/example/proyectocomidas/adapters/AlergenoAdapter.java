@@ -1,12 +1,14 @@
-package com.example.proyectocomidas;
+package com.example.proyectocomidas.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.proyectocomidas.models.Alergeno;
+import com.example.proyectocomidas.R;
 
 import java.util.ArrayList;
 

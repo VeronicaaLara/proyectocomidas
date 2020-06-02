@@ -1,4 +1,4 @@
-package com.example.proyectocomidas;
+package com.example.proyectocomidas.models;
 
 import com.google.gson.Gson;
 

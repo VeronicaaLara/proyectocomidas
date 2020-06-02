@@ -5,21 +5,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import com.google.android.material.navigation.NavigationView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -28,14 +26,21 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.proyectocomidas.adapters.AlergenoAdapter;
+import com.example.proyectocomidas.adapters.IngredienteAdapter;
+import com.example.proyectocomidas.models.Alergeno;
+import com.example.proyectocomidas.models.Ingrediente;
+import com.example.proyectocomidas.models.Producto;
+import com.example.proyectocomidas.models.ProductosCompra;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
+
+/*import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.FirebaseStorage;*/
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +51,9 @@ public class ProductosActivity extends AppCompatActivity implements NavigationVi
     private List<Producto> products;
     private RecyclerView rvProducts;
     private ProductoAdapter productAdapter;
-    private FirebaseFirestore mFirestore;
+    /*private FirebaseFirestore mFirestore;
     private FirebaseAuth mAuth;
-    private FirebaseStorage mStorage;
+    private FirebaseStorage mStorage;*/
     private String idCategory;
     private String nameCategory;
     private EditText etFilter;
@@ -76,13 +81,14 @@ public class ProductosActivity extends AppCompatActivity implements NavigationVi
     }
 
     private void initMenu(){
-        mAuth = FirebaseAuth.getInstance();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        if(mAuth.getCurrentUser() != null){
+        boolean isLogged = preferences.getBoolean(Constants.PREF_LOG, false);
+
+        if(isLogged){
             navigationView.inflateMenu(R.menu.menu_usuario);
         }else{
             navigationView.inflateMenu(R.menu.menu_anonimo);
@@ -121,7 +127,10 @@ public class ProductosActivity extends AppCompatActivity implements NavigationVi
         } else if (id == R.id.itemCarrito) {
             startActivity(new Intent(ProductosActivity.this, CestaCompraActivity.class));
         } else if (id == R.id.itemCerrarSesion) {
-            mAuth.signOut();
+            SharedPreferences preferences = getSharedPreferences(Constants.PREF, MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(Constants.PREF_LOG,false);
+            editor.apply();
             Intent intent = getIntent();
             finish();
             startActivity(intent);
@@ -132,7 +141,7 @@ public class ProductosActivity extends AppCompatActivity implements NavigationVi
         return true;
     }
 
-    private void initUI(){
+    private void initUI(){/*
         productFilter = new ArrayList<>();
         mFirestore = FirebaseFirestore.getInstance();
         mStorage = FirebaseStorage.getInstance();
@@ -280,10 +289,11 @@ public class ProductosActivity extends AppCompatActivity implements NavigationVi
                     }
                 });
             }
-        });
+        });*/
     }
 
     private void getIngredientsAndAllergens(final int index){
+        /*
         final List<Alergeno> allergens = new ArrayList<>();
         final List<AlergenosIngredientes> alergenosIngredientes = new ArrayList<>();
         final List<IngredientesProducto> ingredientesProductos = new ArrayList<>();
@@ -373,7 +383,7 @@ public class ProductosActivity extends AppCompatActivity implements NavigationVi
                     });
                 }
             }
-        });
+        });*/
     }
 
     @Override
@@ -468,7 +478,7 @@ public class ProductosActivity extends AppCompatActivity implements NavigationVi
         builder.create();
     }
 
-    public void montarModal(int index, ArrayList<Ingrediente> ingredientes, ArrayList<Alergeno> alergenos){
+    public void montarModal(int index, ArrayList<Ingrediente> ingredientes, ArrayList<Alergeno> alergenos){/*
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(ProductosActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.producto_dialog, null);
         TextView tvName = mView.findViewById(R.id.nombre_producto);
@@ -509,7 +519,7 @@ public class ProductosActivity extends AppCompatActivity implements NavigationVi
         mBuilder.setView(mView);
         AlertDialog alertDialog = mBuilder.create();
         alertDialog.show();
-
+        */
         }
 }
 

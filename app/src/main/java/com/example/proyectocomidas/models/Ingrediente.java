@@ -1,11 +1,11 @@
-package com.example.proyectocomidas;
+package com.example.proyectocomidas.models;
 
-public class Alergeno {
+public class Ingrediente{
 
     private String name;
     private String id;
 
-    public Alergeno(String id, String name) {
+    public Ingrediente(String id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -23,7 +23,7 @@ public class Alergeno {
 
     @Override
     public String toString() {
-        return "Allergen{" +
+        return "Ingredient{" +
                 "nombre='" + name + '\'' +
                 '}';
     }

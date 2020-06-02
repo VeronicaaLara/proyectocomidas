@@ -3,22 +3,24 @@ package com.example.proyectocomidas.models;
 public class Categoria {
 
     private String name;
-    private String urlFoto;
-    private String id;
+    private String image;
+    private int id;
+    private String min;
 
 
-    public Categoria(String name, String urlFoto, String id) {
+    public Categoria(String name, String urlFoto, int id, String min) {
         this.name = name;
-        this.urlFoto = urlFoto;
+        this.image = urlFoto;
         this.id = id;
 
+        this.min = min;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -30,19 +32,24 @@ public class Categoria {
         this.name = name;
     }
 
-    public String getUrlFoto() {
-        return urlFoto;
+    public String getImage() {
+        return image;
     }
 
-    public void setUrlFoto(String urlFoto) {
-        this.urlFoto = urlFoto;
+    public void setImage(String urlFoto) {
+        this.image = urlFoto;
     }
+
+    public String getMin() { return min; }
+
+    public void setMin(String min) { this.min = min; }
 
     @Override
     public String toString() {
         return "Categoria{" +
                 "name='" + name + '\'' +
-                ", urlFoto='" + urlFoto + '\'' +
+                ", image='" + image + '\'' +
                 '}';
     }
+
 }
