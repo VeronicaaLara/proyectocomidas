@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,34 +8,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="30dp"
+    android:background="@drawable/background"
     tools:context=".ComentariosActivity"
     >
+
 
     <Button
         android:id="@+id/btnAddComentario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
-        android:background="@color/colorAccent"
+        android:background="@color/naranja"
         android:text="Añadir comentario"
-        android:textColor="#FFF"
+        android:textColor="#000"
         android:layout_marginBottom="10dp"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorAccent"
-        android:text="TODOS LOS COMENTARIOS"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"/>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <android.support.v7.widget.RecyclerView
 
         android:id="@+id/rvComentarios"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+
 
 </LinearLayout>

@@ -10,10 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="DETALLE DEL PEDIDO"
+        android:background="@color/verde"
+        android:textColor="@color/blanco"
         android:textSize="20dp"
         android:layout_gravity="center" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/rvDetallePedido"
         android:layout_width="match_parent"
         android:layout_height="300dp" />
@@ -22,6 +24,7 @@
         android:id="@+id/btnAddProducts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Añadir al carrito"/>
+        android:text="Añadir al carrito"
+        android:background="@color/naranja"/>
 
 </LinearLayout>

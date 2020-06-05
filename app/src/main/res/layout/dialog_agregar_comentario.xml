@@ -8,7 +8,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorAccent"
         android:text="Añadir un comentario"
         android:layout_gravity="center"
         android:gravity="center"/>
@@ -19,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:hint="Añadir comentario"
+        android:backgroundTint="@color/rojo"
         android:inputType="text" />
 
 
@@ -27,8 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@color/colorAccent"
+        android:background="@color/naranja"
         android:text="Enviar comentario"
-        android:textColor="#FFF" />
+        android:textColor="@color/negro" />
 
 </LinearLayout>

@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CestaCompraActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/background">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/rvCestaCompra"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
@@ -23,7 +24,9 @@
             android:id="@+id/pagarBtn"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="Pagar">
+            android:text="Pagar"
+            android:background="@color/rojo"
+            android:textColor="#fff">
         </Button>
 
         <LinearLayout
@@ -37,7 +40,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textSize="15dp"
-                android:text="Precio Total:">
+                android:text="Precio Total:"
+                android:textColor="@color/verde">
 
             </TextView>
 
@@ -46,8 +50,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="15dp"
-                android:text="0.00€">
+                android:textSize="20dp"
+                android:text="0.00€"
+                android:textColor="@color/verde">
 
             </TextView>
 
