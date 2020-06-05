@@ -120,7 +120,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void initUI(){
         txName = findViewById(R.id.txName);
-        txApellido.findViewById(R.id.txApellido);
+       // txApellido.findViewById(R.id.txApellido);
         txEmail = findViewById(R.id.txEmail);
         txAddress = findViewById(R.id.txAddress);
         txPhone = findViewById(R.id.txPhone);
@@ -159,7 +159,7 @@ public class RegisterActivity extends AppCompatActivity {
                         editor.putBoolean(Constants.PREF_LOG,true);
                         editor.putString(Constants.PREF_USER_TOKEN, response.getString("token"));
                         editor.putString(Constants.PREF_USER, jsonObject.getString("public_name"));
-                        editor.putInt(Constants.PREF_USER_ID, jsonArray.getInt("id"));
+                        //editor.putInt(Constants.PREF_USER_ID, jsonArray.getInt("id"));
                         editor.apply();
 
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
