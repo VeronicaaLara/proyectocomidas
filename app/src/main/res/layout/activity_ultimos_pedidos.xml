@@ -9,6 +9,7 @@
     android:background="@drawable/background">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/idUltimoPedido"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

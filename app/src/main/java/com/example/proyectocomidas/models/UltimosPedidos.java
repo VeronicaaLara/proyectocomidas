@@ -13,22 +13,24 @@ public class UltimosPedidos {
 
         this.idUtimoPedido = idUtimoPedido;
         this.nombre = nombre;
+        this.idProducto = idProducto;
+        this.idPedido = idPedido;
     }
 
     public String getIdUtimoPedido() {
         return idUtimoPedido;
     }
 
-    public String getNombreUltimoPedido() {
+    public String getNombre() {
         return nombre;
     }
 
-    public void setIdProducto(String idProducto) {
-        this.idProducto = idProducto;
+    public String getIdProducto() {
+        return idProducto;
     }
 
-    public void setIdPedido(String idPedido) {
-        this.idPedido = idPedido;
+    public String getIdPedido() {
+        return idPedido;
     }
 
     @Override

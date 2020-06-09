@@ -9,7 +9,7 @@
     android:background="@drawable/background">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/idUltimoPedido"
+        android:id="@+id/pedidoFavorito"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
