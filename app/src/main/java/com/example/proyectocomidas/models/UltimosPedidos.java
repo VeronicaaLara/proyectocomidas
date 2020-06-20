@@ -1,5 +1,6 @@
 package com.example.proyectocomidas.models;
 
+
 public class UltimosPedidos {
 
 
@@ -9,7 +10,7 @@ public class UltimosPedidos {
     private String idPedido;
 
 
-    public UltimosPedidos (String id, String nombre){
+    public UltimosPedidos(String id, String nombre) {
 
         this.idUtimoPedido = idUtimoPedido;
         this.nombre = nombre;
@@ -33,6 +34,22 @@ public class UltimosPedidos {
         return idPedido;
     }
 
+    public void setIdUtimoPedido(String idUtimoPedido) {
+        this.idUtimoPedido = idUtimoPedido;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setIdProducto(String idProducto) {
+        this.idProducto = idProducto;
+    }
+
+    public void setIdPedido(String idPedido) {
+        this.idPedido = idPedido;
+    }
+
     @Override
     public String toString() {
         return "UltimosPedidos{" +
@@ -42,4 +59,7 @@ public class UltimosPedidos {
                 ", idPedido='" + idPedido + '\'' +
                 '}';
     }
+
 }
+
+
