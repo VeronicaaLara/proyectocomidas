@@ -56,7 +56,7 @@
                 android:layout_toEndOf="@id/precioProducto"
                 android:layout_marginStart="150dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/btn"
+                android:background="@color/naranja"
                 android:textColor="@color/txtBtn"/>
         </RelativeLayout>
 
